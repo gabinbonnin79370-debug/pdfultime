@@ -159,8 +159,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [{ price_data: priceData, quantity: 1 }],
       mode: 'payment',
-      success_url: `http://localhost:3000/?success=true`,
-      cancel_url: `http://localhost:3000/?canceled=true`,
+      success_url: `https://pdfultime.onrender.com/?success=true`,
+      cancel_url: `https://pdfultime.onrender.com/?canceled=true`,
       metadata: { userUuid, plan }
     });
 
