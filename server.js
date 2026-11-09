@@ -1,3 +1,4 @@
+const sqlite3 = require("sqlite3");
 require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
