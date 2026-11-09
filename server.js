@@ -79,7 +79,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
       line_items: [{ price_data: priceData, quantity: 1 }],
       mode: 'payment',
       success_url: 'https://pdfultime.onrender.com/?success=true',
-      cancel_url: 'https://pdfultime.onrender.com/?canceled=true',
+      cancel_url: 'https://pdfultime.onrender.com/',
       metadata: { userUuid, plan }
     });
 
