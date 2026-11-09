@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDFULTIME - Outils PDF en ligne & Accès Illimité</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 1.5rem; }
+    .logo-container { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .logo-svg { width: 40px; height: 40px; }
+    .logo-text { font-size: 1.6rem; font-weight: 800; color: #ffffff; letter-spacing: -0.03em; }
+    .logo-text span {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    
+    .btn-nav {
+      background-color: var(--primary);
+      color: white !important;
+      padding: 0.6rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    .btn-nav:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+
+    .hero { text-align: center; padding: 5rem 1rem 3rem 1rem; max-width: 900px; margin: 0 auto; }
+    .hero h1 {
+      font-size: 3.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a3b1c6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 750px; margin-left: auto; margin-right: auto; }
+
+    .compatibility-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .tag {
+      background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3);
+      color: #93c5fd; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+    }
+
+    .trial-banner {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      background: linear-gradient(90deg, rgba(37, 99, 235, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border: 1px solid var(--card-border); padding: 0.75rem 1.5rem; border-radius: 30px; font-size: 1rem; font-weight: 600; color: #fff;
+    }
+    .trial-banner span { color: var(--accent); font-weight: 700; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
+
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 6rem; }
+    .tool-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2.5rem 2rem;
+      transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .tool-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+    .tool-card h3 { font-size: 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .tool-card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; height: 3rem; }
+
+    .file-input-group { display: flex; flex-direction: column; gap: 1.25rem; }
+    input[type="file"], input[type="text"] {
+      background: var(--bg); border: 1px solid var(--card-border); color: var(--text);
+      padding: 0.85rem; border-radius: 10px; width: 100%;
+    }
+    input[type="file"] { cursor: pointer; }
+
+    .btn-action {
+      background-color: var(--primary); color: white; border: none; padding: 0.85rem 1.5rem;
+      border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .btn-action:hover { background-color: var(--primary-hover); }
+
+    .pricing-section { padding-top: 4rem; border-top: 1px solid var(--card-border); }
+    .pricing-header { text-align: center; margin-bottom: 4rem; }
+    .pricing-header h2 { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 2rem; align-items: start; }
+    .pricing-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 3rem 2rem 2.5rem 2rem;
+      display: flex; flex-direction: column; justify-content: space-between; position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -15px rgba(0,0,0,0.6); }
+    .pricing-card.popular { border: 2px solid var(--primary); background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, var(--card-bg) 100%); }
+
+    .badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); color: white; padding: 6px 20px;
+      font-size: 0.8rem; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+    .pricing-card h3 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .price { font-size: 3rem; font-weight: 800; color: #ffffff; margin: 1.5rem 0; letter-spacing: -0.02em; }
+
+    .features { list-style: none; margin: 2rem 0 3rem 0; }
+    .features li { padding: 0.75rem 0; color: var(--text); display: flex; align-items: center; gap: 0.85rem; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .icon-check { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
+    .icon-cross { color: var(--danger); font-weight: bold; font-size: 1.1rem; }
+    .disabled-feature { color: var(--text-muted); opacity: 0.7; }
+
+    .btn-buy {
+      display: block; text-align: center; background-color: var(--primary); color: white; text-decoration: none;
+      padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.2s, transform 0.1s; cursor: pointer; border: none; width: 100%;
+    }
+    .btn-buy:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+    .btn-buy.secondary { background-color: transparent; border: 1px solid var(--card-border); color: var(--text); }
+    .btn-buy.secondary:hover { background-color: rgba(255, 255, 255, 0.05); border-color: var(--text-muted); }
+
+    footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 6rem; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+
+  <navbar>
+    <div class="nav-left">
+      <a href="#" class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+          <path d="M25 10H60L75 25V80C75 85.5228 70.5228 90 65 90H25C19.4772 90 15 85.5228 15 80V20C15 14.4772 19.4772 10 25 10Z" fill="url(#logoGradient)" />
+          <path d="M60 10V25H75L60 10Z" fill="#1d4ed8" opacity="0.8"/>
+          <path d="M35 35H50C55.5228 35 60 39.4772 60 45V48C60 53.5228 55.5228 58 50 58H42V70H35V35ZM42 51H50C51.6569 51 53 49.6569 53 48V45C53 43.3431 51.6569 42 50 42H42V51Z" fill="white"/>
+        </svg>
+        <div class="logo-text">PDF<span>ULTIME</span></div>
+      </a>
+      <div class="nav-badge"><span>🛡️</span> 100% Sécurisé & Sans Inscription</div>
+    </div>
+    <div class="nav-links">
+      <a href="#outils">Outils</a>
+      <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
+    </div>
+  </navbar>
+
+  <div class="hero">
+    <h1>Manipulez vos PDF sans aucune limite</h1>
+    <p>Fusionnez, extrayez, compressez et convertissez vos documents en quelques secondes depuis n'importe quel navigateur.</p>
+    
+    <div class="compatibility-tags">
+      <span class="tag">💻 Windows 7, 10, 11</span>
+      <span class="tag">🍏 macOS</span>
+      <span class="tag">📱 Mobile / Tablette</span>
+      <span class="tag">🌐 Web (Aucun téléchargement requis)</span>
+    </div>
+
+    <div class="trial-banner">
+      ⚡ <span id="trial-text">Chargement des essais gratuits...</span>
+    </div>
+  </div>
+
+<div class="container">
+    
+    <div id="outils" class="tools-grid">
+      
+      <!-- FUSION -->
+      <div class="tool-card">
+        <h3>🔗 Fusionner des PDF</h3>
+        <p>Assemblez plusieurs fichiers PDF en un seul document en 1 clic.</p>
+        <form action="/api/merge" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdfs" multiple required accept="application/pdf">
+          <button type="submit" class="btn-action">Fusionner les fichiers</button>
+        </form>
+      </div>
+
+      <!-- EXTRACTION -->
+      <div class="tool-card">
+        <h3>✂️ Extraire des pages</h3>
+        <p>Sélectionnez et conservez uniquement les pages dont vous avez besoin.</p>
+        <form action="/api/extract-pages" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <input type="text" name="pages" placeholder="Pages à garder (ex: 1, 3, 5)" required>
+          <button type="submit" class="btn-action">Extraire les pages</button>
+        </form>
+      </div>
+
+      <!-- COMPRESSION -->
+      <div class="tool-card">
+        <h3>🗜️ Compresser un PDF</h3>
+        <p>Réduisez le poids de votre fichier PDF tout en conservant sa qualité.</p>
+        <form action="/api/compress" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Compresser le fichier</button>
+        </form>
+      </div>
+
+      <!-- CONVERSION WORD -->
+      <div class="tool-card">
+        <h3>🔄 Convertir PDF en Word</h3>
+        <p>Transformez vos PDF en documents Word (.docx) éditables facilement.</p>
+        <form action="/api/convert" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Convertir en Word</button>
+        </form>
+      </div>
+
+      <!-- CONVERSION EXCEL -->
+      <div class="tool-card">
+        <h3>📊 Convertir PDF en Excel</h3>
+        <p>Extrayez les données de vos PDF directement dans un tableau Excel (.xlsx).</p>
+        <form action="/api/convert-excel" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Convertir en Excel</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div id="tarifs" class="pricing-section">
+      <div class="pricing-header">
+        <h2>Pass & Tarifs d'Accès</h2>
+        <p style="color: var(--text-muted);">Débloquez l'accès illimité instantanément. Aucun abonnement caché.</p>
+      </div>
+
+      <div class="pricing-grid">
+        
+        <!-- PASS 24H -->
+        <div class="pricing-card">
+          <div>
+            <h3>Pass 24h</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
+            <div class="price">2,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Traitement ultra-rapide</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('24h')" class="btn-buy secondary">Prendre le Pass 24h</button>
+        </div>
+
+        <!-- PASS 1 SEMAINE -->
+        <div class="pricing-card popular">
+          <div class="badge">Le plus populaire</div>
+          <div>
+            <h3>Pass 1 Semaine</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
+            <div class="price">4,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('week')" class="btn-buy">Prendre le Pass 1 Semaine</button>
+        </div>
+
+        <!-- PASS 1 MOIS -->
+        <div class="pricing-card">
+          <div>
+            <h3>Pass 1 Mois</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
+            <div class="price">9,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+              <li><span class="icon-check">✓</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('month')" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 PDFULTIME - Tous droits réservés. | <a href="/mentions.html" style="color: var(--text-muted); text-decoration: underline;">Mentions Légales & CGV</a></p>
+  </footer>
+
+  <script>
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        const trialSpan = document.getElementById("trial-text");
+        
+        if (data.isPaid) {
+          trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
+        } else if (data.trials > 0) {
+          trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
+        } else {
+          trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
+          trialSpan.parentElement.style.borderColor = "#ef4444";
+        }
+      } catch (err) {
+        console.error("Erreur statut", err);
+      }
+    }
+
+    document.querySelectorAll("form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+
+        if (!data.isPaid && data.trials <= 0) {
+          e.preventDefault();
+          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
+          document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    async function startCheckout(plan) {
+      try {
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan })
+        });
+        const data = await response.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert("Erreur lors de la redirection vers le paiement.");
+        }
+      } catch (err) {
+        console.error("Erreur checkout", err);
+      }
+    }
+
+    checkStatus();
+  </script>
+
+</body>
+</html>
