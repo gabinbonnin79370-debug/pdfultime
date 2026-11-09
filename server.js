@@ -35,7 +35,7 @@ let db;
 // INITIALISATION DE LA BASE DE DONNÉES SQLITE
 // ==========================================
 async function initDB() {
-  db = await open({
+  db = await open({ driver: sqlite3.Database,
     filename: path.join(__dirname, 'database.sqlite'),
   });
 
