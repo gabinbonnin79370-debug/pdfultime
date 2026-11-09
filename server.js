@@ -66,11 +66,11 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
     let priceData = {};
     if (plan === '24h') {
-      priceData = { currency: 'eur', unit_amount: 299, product_data: { name: 'Pass 24h - PDFULTIME' } };
+      priceData = { currency: 'eur', unit_amount: 299, product_data: { name: 'Pass 24h - PDFULTIME', description: 'Accès illimité pendant 24h à tous les outils de conversion et manipulation PDF.' } };
     } else if (plan === 'week') {
-      priceData = { currency: 'eur', unit_amount: 499, product_data: { name: 'Pass 1 Semaine - PDFULTIME' } };
+      priceData = { currency: 'eur', unit_amount: 499, product_data: { name: 'Pass 1 Semaine - PDFULTIME', description: 'Accès illimité pendant 7 jours à tous les outils PDF.' } };
     } else if (plan === 'month') {
-      priceData = { currency: 'eur', unit_amount: 999, product_data: { name: 'Pass 1 Mois (Pro) - PDFULTIME' } };
+      priceData = { currency: 'eur', unit_amount: 999, product_data: { name: 'Pass 1 Mois (Pro) - PDFULTIME', description: 'Accès illimité pendant 30 jours (Pro) à tous les outils PDF.' } };
     } else {
       return res.status(400).send('Offre invalide.');
     }
