@@ -8,7 +8,6 @@ const ExcelJS = require('exceljs');
 const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const sqlite3 = require('sqlite3').verbose();
 const { open } = require('sqlite');
 const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -38,7 +37,6 @@ let db;
 async function initDB() {
   db = await open({
     filename: path.join(__dirname, 'database.sqlite'),
-    driver: sqlite3.Database
   });
 
   await db.exec(`
