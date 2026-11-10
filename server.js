@@ -333,6 +333,18 @@ app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, re
   }
 });
 
+// ==========================================
+// ROUTES POUR LES PAGES DE NICHES SEO
+// ==========================================
+app.get(['/etudiant', '/comptable', '/immobilier'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Route globale de secours (SPA / Index)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Serveur PDFULTIME démarré sur http://localhost:${PORT}`);
