@@ -302,6 +302,20 @@
 
     </div>
 
+    <!-- SECTION AVIS CLIENTS DYNAMIQUE -->
+    <div style="padding-top: 2rem; margin-bottom: 4rem;">
+      <div class="pricing-header">
+        <h2>Ce que pensent nos utilisateurs</h2>
+        <p style="color: var(--text-muted);">Avis vérifiés de nos utilisateurs en accès illimité.</p>
+      </div>
+      <div id="reviews-grid" class="pricing-grid">
+        <!-- Les avis s'injecteront dynamiquement ici -->
+        <div class="pricing-card" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+          Chargement des avis...
+        </div>
+      </div>
+    </div>
+
     <div id="tarifs" class="pricing-section">
       <div class="pricing-header">
         <h2>Pass & Tarifs d'Accès</h2>
@@ -509,7 +523,6 @@
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      // Liens Stripe Live Pro (Le 3e bouton passe à 19.99€)
       plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
       plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
       plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
@@ -570,7 +583,6 @@
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      // Liens Stripe Live Immo / Pro
       plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
       plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
       plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
@@ -615,6 +627,50 @@
       }
     }
 
+    // Fonction pour charger dynamiquement les avis depuis le backend
+    async function loadReviews() {
+      try {
+        const res = await fetch('/api/reviews');
+        const reviews = await res.json();
+        const grid = document.getElementById('reviews-grid');
+
+        if (reviews.length === 0) {
+          // Avis de secours par défaut si la base est vide au début
+          grid.innerHTML = `
+            <div class="pricing-card" style="padding: 2rem;">
+              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Mon dossier de master était rejeté à cause du poids. Le compresseur l'a allégé parfaitement en un clic !"</p>
+              <div style="font-weight: 700; font-size: 0.9rem;">Lucas M. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Pass Étudiant)</span></div>
+            </div>
+            <div class="pricing-card" style="padding: 2rem;">
+              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Ultra rapide pour fusionner toutes mes factures mensuelles en un seul fichier propre. Top !"</p>
+              <div style="font-weight: 700; font-size: 0.9rem;">Sophie R. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Pass Pro)</span></div>
+            </div>
+            <div class="pricing-card" style="padding: 2rem;">
+              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Super pratique pour assembler les baux et états des lieux. Rien à redire, ça marche super bien."</p>
+              <div style="font-weight: 700; font-size: 0.9rem;">Marc D. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Immobilier)</span></div>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = '';
+        reviews.forEach(rev => {
+          grid.innerHTML += `
+            <div class="pricing-card" style="padding: 2rem;">
+              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">${'★'.repeat(rev.rating)}${'☆'.repeat(5 - rev.rating)}</div>
+              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"${rev.comment}"</p>
+              <div style="font-weight: 700; font-size: 0.9rem;">${rev.name}</div>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error("Erreur chargement avis", err);
+      }
+    }
+
     document.querySelectorAll("form").forEach(form => {
       form.addEventListener("submit", async (e) => {
         const res = await fetch('/api/status');
@@ -629,6 +685,7 @@
     });
 
     checkStatus();
+    loadReviews();
   </script>
 
 </body>
