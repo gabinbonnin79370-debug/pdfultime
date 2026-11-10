@@ -290,9 +290,9 @@
         <!-- PASS 24H -->
         <div class="pricing-card">
           <div>
-            <h3>Pass 24h</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
-            <div class="price">2,99 €</div>
+            <h3 id="plan-1-title">Pass 24h</h3>
+            <p id="plan-1-desc" style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
+            <div id="plan-1-price" class="price">2,99 €</div>
             <ul class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
@@ -303,16 +303,16 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button onclick="startCheckout('24h')" class="btn-buy secondary">Prendre le Pass 24h</button>
+          <button id="plan-1-btn" onclick="startCheckout('24h')" class="btn-buy secondary">Prendre le Pass 24h</button>
         </div>
 
         <!-- PASS 1 SEMAINE -->
         <div class="pricing-card popular">
           <div class="badge">Le plus populaire</div>
           <div>
-            <h3>Pass 1 Semaine</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
-            <div class="price">4,99 €</div>
+            <h3 id="plan-2-title">Pass 1 Semaine</h3>
+            <p id="plan-2-desc" style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
+            <div id="plan-2-price" class="price">4,99 €</div>
             <ul class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
@@ -323,15 +323,15 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button onclick="startCheckout('week')" class="btn-buy">Prendre le Pass 1 Semaine</button>
+          <button id="plan-2-btn" onclick="startCheckout('week')" class="btn-buy">Prendre le Pass 1 Semaine</button>
         </div>
 
         <!-- PASS 1 MOIS -->
         <div class="pricing-card">
           <div>
-            <h3>Pass 1 Mois</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
-            <div class="price">9,99 €</div>
+            <h3 id="plan-3-title">Pass 1 Mois</h3>
+            <p id="plan-3-desc" style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
+            <div id="plan-3-price" class="price">9,99 €</div>
             <ul class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
@@ -342,7 +342,7 @@
               <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button onclick="startCheckout('month')" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
+          <button id="plan-3-btn" onclick="startCheckout('month')" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
         </div>
 
       </div>
@@ -355,14 +355,13 @@
   </footer>
 
   <script>
-    // --- ROUTEUR FRONT-END & PERSONNALISATION TOTALE DES NICHES ---
+    // --- ROUTEUR FRONT-END & PERSONNALISATION TOTALE (OUTILS + TARIFS) ---
     const path = window.location.pathname;
 
     const heroTitle = document.getElementById('main-hero-title');
     const heroSubtitle = document.getElementById('main-hero-subtitle');
-    const pricingCardSubtitles = document.querySelectorAll('.pricing-card p');
 
-    // Éléments des cartes d'outils
+    // Cartes d'outils
     const card1Title = document.getElementById('card-1-title');
     const card1Desc = document.getElementById('card-1-desc');
     const card2Title = document.getElementById('card-2-title');
@@ -374,86 +373,111 @@
     const card5Title = document.getElementById('card-5-title');
     const card5Desc = document.getElementById('card-5-desc');
 
+    // Cartes de tarifs
+    const plan1Title = document.getElementById('plan-1-title');
+    const plan1Desc = document.getElementById('plan-1-desc');
+    const plan1Btn = document.getElementById('plan-1-btn');
+
+    const plan2Title = document.getElementById('plan-2-title');
+    const plan2Desc = document.getElementById('plan-2-desc');
+    const plan2Btn = document.getElementById('plan-2-btn');
+
+    const plan3Title = document.getElementById('plan-3-title');
+    const plan3Desc = document.getElementById('plan-3-desc');
+    const plan3Btn = document.getElementById('plan-3-btn');
+
     if (path === '/etudiant') {
-      // 1. Étudiants
+      // --- ÉTUDIANTS ---
       heroTitle.innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
       heroSubtitle.textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents de candidature en 1 clic.";
       document.title = "PDFULTIME - Compresser et fusionner pour Étudiants & Concours";
       
-      // Personnalisation des cartes d'outils
+      // Outils
       card1Title.innerHTML = "🔗 Dossier de Candidature";
       card1Desc.textContent = "Assemblez CV, lettre de motivation et pièces jointes en un seul PDF propre.";
-      
       card2Title.innerHTML = "✂️ Extraire une Attestation";
       card2Desc.textContent = "Isolez rapidement la page exacte de votre relevé de notes ou diplôme.";
-      
       card3Title.innerHTML = "🗜️ Compresseur Anti-Rejet";
       card3Desc.textContent = "Réduisez le poids de votre dossier exactement sous la limite des 2 Mo.";
-      
       card4Title.innerHTML = "🔄 Convertir CV en Word";
       card4Desc.textContent = "Modifiez ou adaptez facilement un ancien CV ou modèle de lettre.";
-      
       card5Title.innerHTML = "📊 Tableau de Suivi Vœux";
       card5Desc.textContent = "Exportez vos listes de vœux et données de candidatures en Excel.";
 
-      // Tarifs
-      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Idéal pour un dossier de dernière minute urgent.";
-      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Parfait pour la saison des concours et des vœux Master.";
-      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Pour toute la durée de vos recherches de formations.";
+      // Tarifs spécifiques Étudiants
+      plan1Title.textContent = "Pass Urgence 24h";
+      plan1Desc.textContent = "Idéal pour valider un dossier la veille de la clôture Parcoursup.";
+      plan1Btn.textContent = "Prendre le Pass Urgence";
+
+      plan2Title.textContent = "Pass Concours & Vœux (7j)";
+      plan2Desc.textContent = "Parfait pour toute la période de soumission de vos voeux Master.";
+      plan2Btn.textContent = "Prendre le Pass Semaine";
+
+      plan3Title.textContent = "Pass Année Étudiante (Mois)";
+      plan3Desc.textContent = "Tranquillité totale pour tous vos dossiers de l'année.";
+      plan3Btn.textContent = "Prendre le Pass Mois";
 
     } else if (path === '/comptable') {
-      // 2. Comptables
+      // --- COMPTABLES ---
       heroTitle.innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
       heroSubtitle.textContent = "Gagnez un temps précieux au quotidien en assemblant, compressant et nettoyant vos factures et justificatifs pour vos clients ou bilans.";
       document.title = "PDFULTIME - Outil PDF pour Cabinets Comptables & Gestion";
 
-      // Personnalisation des cartes d'outils
+      // Outils
       card1Title.innerHTML = "🔗 Fusion de Justificatifs";
       card1Desc.textContent = "Regroupez des dizaines de factures et reçus en un seul grand fichier ordonné.";
-      
       card2Title.innerHTML = "✂️ Extraire une Facture";
       card2Desc.textContent = "Isolez une page spécifique d'un grand livre ou rapport financier.";
-      
       card3Title.innerHTML = "🗜️ Compression de Liasses";
       card3Desc.textContent = "Allégez rapidement vos dossiers volumineux pour les envoyer par e-mail.";
-      
       card4Title.innerHTML = "🔄 PDF vers Word Pro";
       card4Desc.textContent = "Transformez des rapports PDF en documents modifiables.";
-      
       card5Title.innerHTML = "📊 PDF vers Tableaux Excel";
       card5Desc.textContent = "Extrayez des données chiffrées de factures directement dans un tableur.";
 
-      // Tarifs
-      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Pour un bouclage de dossier ou une facture isolée.";
-      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Idéal pour la période fiscale et la gestion hebdomadaire.";
-      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Tranquillité totale pour les cabinets et indépendants.";
+      // Tarifs spécifiques Comptables
+      plan1Title.textContent = "Pass Facture 24h";
+      plan1Desc.textContent = "Pour un bouclage de dossier ou une facture isolée urgente.";
+      plan1Btn.textContent = "Prendre le Pass 24h";
+
+      plan2Title.textContent = "Pass Semaine Fiscale";
+      plan2Desc.textContent = "Idéal pour la période de clôture et la gestion hebdomadaire.";
+      plan2Btn.textContent = "Prendre le Pass Semaine";
+
+      plan3Title.textContent = "Pass Cabinet Pro (1 Mois)";
+      plan3Desc.textContent = "Solution pro illimitée pour cabinets et indépendants.";
+      plan3Btn.textContent = "Prendre le Pass Pro";
 
     } else if (path === '/immobilier') {
-      // 3. Immobilier
+      // --- IMMOBILIER ---
       heroTitle.innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
       heroSubtitle.textContent = "Assemblez bail, DPE, états des lieux et pièces d'identité dans l'ordre parfait pour vos propriétaires, acquéreurs ou agences immobilières.";
       document.title = "PDFULTIME - Gestion des dossiers PDF pour l'Immobilier";
 
-      // Personnalisation des cartes d'outils
+      // Outils
       card1Title.innerHTML = "🔗 Pack Dossier de Location";
       card1Desc.textContent = "Assemblez bail, DPE, pièces d'identité et garanties en un seul dossier prêt.";
-      
       card2Title.innerHTML = "✂️ Extraire un État des Lieux";
       card2Desc.textContent = "Extrayez les pages de signature ou de constat d'un rapport technique.";
-      
       card3Title.innerHTML = "🗜️ Alléger un Dossier lourd";
       card3Desc.textContent = "Compressez un dossier de location complet pour respecter les limites d'envoi.";
-      
       card4Title.innerHTML = "🔄 Bail vers Word";
       card4Desc.textContent = "Modifiez rapidement des clauses ou des modèles de contrats de bail.";
-      
       card5Title.innerHTML = "📊 Export Rôles / Quittances";
       card5Desc.textContent = "Gérez et exportez vos données de suivi de loyers en Excel.";
 
-      // Tarifs
-      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Parfait pour un dossier de location rapide.";
-      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Idéal pour enchaîner les visites et états des lieux.";
-      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Solution pro pour les agences et gestionnaires de biens.";
+      // Tarifs spécifiques Immobilier
+      plan1Title.textContent = "Pass Visite 24h";
+      plan1Desc.textContent = "Parfait pour constituer et envoyer un dossier de location rapide.";
+      plan1Btn.textContent = "Prendre le Pass 24h";
+
+      plan2Title.textContent = "Pass Agence (7 Jours)";
+      plan2Desc.textContent = "Idéal pour enchaîner les visites et états des lieux de la semaine.";
+      plan2Btn.textContent = "Prendre le Pass Semaine";
+
+      plan3Title.textContent = "Pass Gestionnaire (1 Mois)";
+      plan3Desc.textContent = "Solution pro pour les agences et gestionnaires de biens.";
+      plan3Btn.textContent = "Prendre le Pass Pro";
     }
 
     async function checkStatus() {
