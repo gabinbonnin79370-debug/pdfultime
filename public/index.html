@@ -303,7 +303,7 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-1-btn" type="button" class="btn-buy secondary">Prendre le Pass 24h</button>
+          <a id="plan-1-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy secondary">Prendre le Pass 24h</a>
         </div>
 
         <!-- PASS 2 -->
@@ -323,7 +323,7 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-2-btn" type="button" class="btn-buy">Prendre le Pass 1 Semaine</button>
+          <a id="plan-2-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy">Prendre le Pass 1 Semaine</a>
         </div>
 
         <!-- PASS 3 -->
@@ -342,7 +342,7 @@
               <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-3-btn" type="button" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
+          <a id="plan-3-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
         </div>
 
       </div>
@@ -390,10 +390,6 @@
     const plan3Price = document.getElementById('plan-3-price');
     const plan3Btn = document.getElementById('plan-3-btn');
     const plan3Features = document.getElementById('plan-3-features');
-
-    let p1Key = '24h';
-    let p2Key = 'week';
-    let p3Key = 'month';
 
     if (path === '/etudiant') {
       heroTitle.innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
@@ -450,8 +446,6 @@
         <li><span class="icon-check">✓</span> Support e-mail 24/7</li>
       `;
 
-      p1Key = '24h'; p2Key = 'week'; p3Key = 'month';
-
     } else if (path === '/comptable') {
       heroTitle.innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
       heroSubtitle.textContent = "Gagnez un temps précieux au quotidien en assemblant, compressant et nettoyant vos factures et justificatifs pour vos clients ou bilans.";
@@ -504,8 +498,6 @@
         <li><span class="icon-check">✓</span> Support prioritaire dédié</li>
       `;
 
-      p1Key = 'comptable_24h'; p2Key = 'comptable_week'; p3Key = 'comptable_month';
-
     } else if (path === '/immobilier') {
       heroTitle.innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
       heroSubtitle.textContent = "Assemblez bail, DPE, états des lieux et pièces d'identité dans l'ordre parfait pour vos propriétaires, acquéreurs ou agences immobilières.";
@@ -556,8 +548,6 @@
         <li><span class="icon-check">✓</span> Tous convertisseurs inclus</li>
         <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
       `;
-
-      p1Key = 'immo_24h'; p2Key = 'immo_week'; p3Key = 'immo_month';
     }
 
     async function checkStatus() {
@@ -591,33 +581,6 @@
         }
       });
     });
-
-    async function startCheckout(planType) {
-      let targetPlan = planType;
-      if (planType === '24h') targetPlan = p1Key;
-      if (planType === 'week') targetPlan = p2Key;
-      if (planType === 'month') targetPlan = p3Key;
-
-      try {
-        const response = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan: targetPlan })
-        });
-        const data = await response.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert("Erreur lors de la redirection vers le paiement.");
-        }
-      } catch (err) {
-        console.error("Erreur checkout", err);
-      }
-    }
-
-    plan1Btn.onclick = () => startCheckout('24h');
-    plan2Btn.onclick = () => startCheckout('week');
-    plan3Btn.onclick = () => startCheckout('month');
 
     checkStatus();
   </script>
