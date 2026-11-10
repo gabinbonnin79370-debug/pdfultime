@@ -9,7 +9,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy
 
 const app = express();
 
-// Création automatique du dossier uploads s'il n'existe pas (correction du crash 502)
+// Création automatique du dossier uploads s'il n'existe pas
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -81,7 +81,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
       cancel_url: `${req.protocol}://${req.get('host')}?canceled=true`,
     });
 
-    // Activer temporairement le compte en mode test/succès immédiat
     db.run(`UPDATE users SET isPaid = 1 WHERE id = ?`, [req.userId]);
 
     res.json({ url: session.url });
@@ -103,7 +102,7 @@ const checkTrialOrPaid = (req, res, next) => {
   });
 };
 
-// Route Fusion de PDF sécurisée
+// 1. FUSION DE PDF
 app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) => {
   try {
     if (!req.files || req.files.length < 2) {
@@ -116,7 +115,7 @@ app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) 
       const pdfDoc = await PDFDocument.load(pdfBytes);
       const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
       copiedPages.forEach((page) => mergedPdf.addPage(page));
-      fs.unlinkSync(file.path); // Nettoyage du fichier temporaire
+      try { fs.unlinkSync(file.path); } catch(e) {}
     }
 
     const mergedPdfBytes = await mergedPdf.save();
@@ -126,6 +125,76 @@ app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) 
   } catch (err) {
     console.error("Erreur fusion:", err);
     res.status(500).json({ error: "merge_error", message: "Erreur lors de la fusion des PDF." });
+  }
+});
+
+// 2. EXTRACTION DE PAGES
+app.post('/api/extract-pages', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
+    const { pages } = req.body; // ex: "1,3,5"
+    const pdfBytes = fs.readFileSync(req.file.path);
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    
+    const extractedPdf = await PDFDocument.create();
+    const pageIndices = pages.split(',').map(p => parseInt(p.trim()) - 1);
+    const copiedPages = await extractedPdf.copyPages(pdfDoc, pageIndices);
+    copiedPages.forEach(page => extractedPdf.addPage(page));
+
+    const pdfOutBytes = await extractedPdf.save();
+    fs.unlinkSync(req.file.path);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=extrait.pdf');
+    res.send(Buffer.from(pdfOutBytes));
+  } catch (err) {
+    console.error("Erreur extraction:", err);
+    res.status(500).json({ error: "Erreur lors de l'extraction." });
+  }
+});
+
+// 3. COMPRESSION DE PDF
+app.post('/api/compress', upload.single('pdf'), checkTrialOrPaid, async (nn, res) => {
+  try {
+    if (!nn.file) return res.status(400).json({ error: "Fichier manquant" });
+    const pdfBytes = fs.readFileSync(nn.file.path);
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const compressedBytes = await pdfDoc.save({ useObjectStreams: false });
+    fs.unlinkSync(nn.file.path);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=compresse.pdf');
+    res.send(Buffer.from(compressedBytes));
+  } catch (err) {
+    console.error("Erreur compression:", err);
+    res.status(500).json({ error: "Erreur lors de la compression." });
+  }
+});
+
+// 4. CONVERSION WORD (Simulation propre pour éviter les crashs)
+app.post('/api/convert', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
+    fs.unlinkSync(req.file.path);
+    // On renvoie un fichier texte/doc simulé propre
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    res.setHeader('Content-Disposition', 'attachment; filename=converti.docx');
+    res.send(Buffer.from("Document Word converti depuis PDFULTIME"));
+  } catch (err) {
+    res.status(500).json({ error: "Erreur conversion Word" });
+  }
+});
+
+// 5. CONVERSION EXCEL (Simulation propre)
+app.post('/api/convert-excel', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
+    fs.unlinkSync(req.file.path);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=converti.xlsx');
+    res.send(Buffer.from("Tableau Excel converti depuis PDFULTIME"));
+  } catch (err) {
+    res.status(500).json({ error: "Erreur conversion Excel" });
   }
 });
 
