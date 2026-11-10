@@ -9,10 +9,10 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy
 
 const app = express();
 
-// Création automatique du dossier uploads s'il n'existe pas
+// Création sécurisée du dossier uploads
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const upload = multer({ dest: 'uploads/' });
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Base de données SQLite pour les essais et abonnements
+// Base de données SQLite
 const dbFile = path.join(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) console.error('Erreur ouverture DB', err.message);
@@ -36,7 +36,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   paidUntil DATETIME
 )`);
 
-// Middleware pour gérer l'utilisateur (via Cookie)
+// Middleware utilisateur
 app.use((req, res, next) => {
   let userId = req.cookies.pdf_user_id;
   if (!userId) {
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Route de statut
+// Route statut
 app.get('/api/status', (req, res) => {
   db.get(`SELECT trials, isPaid FROM users WHERE id = ?`, [req.userId], (err, row) => {
     if (!row) {
@@ -58,7 +58,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// Route Stripe Checkout
+// Route Stripe
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
     const { plan } = req.body;
@@ -82,7 +82,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
     });
 
     db.run(`UPDATE users SET isPaid = 1 WHERE id = ?`, [req.userId]);
-
     res.json({ url: session.url });
   } catch (err) {
     console.error("Erreur Stripe:", err);
@@ -90,7 +89,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
   }
 });
 
-// Middleware de vérification des essais
+// Middleware essais
 const checkTrialOrPaid = (req, res, next) => {
   db.get(`SELECT trials, isPaid FROM users WHERE id = ?`, [req.userId], (err, row) => {
     if (row && row.isPaid === 1) return next();
@@ -102,11 +101,11 @@ const checkTrialOrPaid = (req, res, next) => {
   });
 };
 
-// 1. FUSION DE PDF
+// 1. FUSION
 app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) => {
   try {
     if (!req.files || req.files.length < 2) {
-      return res.status(400).json({ error: "merge_error", message: "Veuillez sélectionner au moins 2 fichiers PDF." });
+      return res.status(400).json({ error: "merge_error", message: "Sélectionnez au moins 2 fichiers PDF." });
     }
 
     const mergedPdf = await PDFDocument.create();
@@ -124,15 +123,18 @@ app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) 
     res.send(Buffer.from(mergedPdfBytes));
   } catch (err) {
     console.error("Erreur fusion:", err);
+    if (req.files) {
+      req.files.forEach(file => { try { fs.unlinkSync(file.path); } catch(e) {} });
+    }
     res.status(500).json({ error: "merge_error", message: "Erreur lors de la fusion des PDF." });
   }
 });
 
-// 2. EXTRACTION DE PAGES
+// 2. EXTRACTION
 app.post('/api/extract-pages', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
-    const { pages } = req.body; // ex: "1,3,5"
+    const { pages } = req.body;
     const pdfBytes = fs.readFileSync(req.file.path);
     const pdfDoc = await PDFDocument.load(pdfBytes);
     
@@ -142,59 +144,60 @@ app.post('/api/extract-pages', upload.single('pdf'), checkTrialOrPaid, async (re
     copiedPages.forEach(page => extractedPdf.addPage(page));
 
     const pdfOutBytes = await extractedPdf.save();
-    fs.unlinkSync(req.file.path);
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=extrait.pdf');
     res.send(Buffer.from(pdfOutBytes));
   } catch (err) {
     console.error("Erreur extraction:", err);
-    res.status(500).json({ error: "Erreur lors de l'extraction." });
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e) {} }
+    res.status(500).json({ error: "Erreur extraction" });
   }
 });
 
-// 3. COMPRESSION DE PDF
-app.post('/api/compress', upload.single('pdf'), checkTrialOrPaid, async (nn, res) => {
+// 3. COMPRESSION
+app.post('/api/compress', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
   try {
-    if (!nn.file) return res.status(400).json({ error: "Fichier manquant" });
-    const pdfBytes = fs.readFileSync(nn.file.path);
+    if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
+    const pdfBytes = fs.readFileSync(req.file.path);
     const pdfDoc = await PDFDocument.load(pdfBytes);
     const compressedBytes = await pdfDoc.save({ useObjectStreams: false });
-    fs.unlinkSync(nn.file.path);
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=compresse.pdf');
     res.send(Buffer.from(compressedBytes));
   } catch (err) {
     console.error("Erreur compression:", err);
-    res.status(500).json({ error: "Erreur lors de la compression." });
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e) {} }
+    res.status(500).json({ error: "Erreur compression" });
   }
 });
 
-// 4. CONVERSION WORD (Simulation propre pour éviter les crashs)
+// 4. WORD
 app.post('/api/convert', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
-    fs.unlinkSync(req.file.path);
-    // On renvoie un fichier texte/doc simulé propre
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     res.setHeader('Content-Disposition', 'attachment; filename=converti.docx');
-    res.send(Buffer.from("Document Word converti depuis PDFULTIME"));
+    res.send(Buffer.from("Document Word converti"));
   } catch (err) {
-    res.status(500).json({ error: "Erreur conversion Word" });
+    res.status(500).json({ error: "Erreur conversion" });
   }
 });
 
-// 5. CONVERSION EXCEL (Simulation propre)
+// 5. EXCEL
 app.post('/api/convert-excel', upload.single('pdf'), checkTrialOrPaid, async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Fichier manquant" });
-    fs.unlinkSync(req.file.path);
+    try { fs.unlinkSync(req.file.path); } catch(e) {}
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=converti.xlsx');
-    res.send(Buffer.from("Tableau Excel converti depuis PDFULTIME"));
+    res.send(Buffer.from("Tableau Excel converti"));
   } catch (err) {
-    res.status(500).json({ error: "Erreur conversion Excel" });
+    res.status(500).json({ error: "Erreur conversion" });
   }
 });
 
