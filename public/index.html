@@ -80,7 +80,7 @@
     }
     .btn-nav:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
 
-    .hero { text-align: center; padding: 5rem 1rem 3rem 1rem; max-width: 900px; margin: 0 auto; }
+    .hero { text-align: center; padding: 4rem 1rem 3rem 1rem; max-width: 900px; margin: 0 auto; }
     .hero h1 {
       font-size: 3.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem;
       background: linear-gradient(135deg, #ffffff 0%, #a3b1c6 100%);
@@ -88,11 +88,20 @@
     }
     .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 750px; margin-left: auto; margin-right: auto; }
 
-    .compatibility-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .compatibility-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
     .tag {
       background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3);
       color: #93c5fd; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
     }
+
+    /* Boutons de raccourcis niches */
+    .niche-quick-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+    .niche-btn {
+      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text);
+      padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none;
+      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .niche-btn:hover { border-color: var(--primary); background: rgba(37, 99, 235, 0.1); transform: translateY(-1px); }
 
     .trial-banner {
       display: inline-flex; align-items: center; gap: 0.75rem;
@@ -200,6 +209,13 @@
       <span class="tag">🍏 macOS</span>
       <span class="tag">📱 Mobile / Tablette</span>
       <span class="tag">🌐 Web (Aucun téléchargement requis)</span>
+    </div>
+
+    <!-- Nouveaux boutons de raccourcis rapides pour les niches -->
+    <div class="niche-quick-links">
+      <a href="/etudiant" class="niche-btn">🎓 Espace Étudiants (Parcoursup/Master)</a>
+      <a href="/comptable" class="niche-btn">📊 Espace Comptables & Factures</a>
+      <a href="/immobilier" class="niche-btn">🏠 Espace Immobilier & Location</a>
     </div>
 
     <div class="trial-banner">
