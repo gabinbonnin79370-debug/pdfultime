@@ -211,7 +211,7 @@
       <span class="tag">🌐 Web (Aucun téléchargement requis)</span>
     </div>
 
-    <!-- Nouveaux boutons de raccourcis rapides pour les niches -->
+    <!-- Raccourcis rapides pour les niches -->
     <div class="niche-quick-links">
       <a href="/etudiant" class="niche-btn">🎓 Espace Étudiants (Parcoursup/Master)</a>
       <a href="/comptable" class="niche-btn">📊 Espace Comptables & Factures</a>
@@ -356,20 +356,39 @@
   </footer>
 
   <script>
-    // --- ROUTEUR FRONT-END POUR LES NICHES (SEO) ---
+    // --- ROUTEUR FRONT-END & PERSONNALISATION DES NICHES ---
     const path = window.location.pathname;
+
+    const heroTitle = document.getElementById('main-hero-title');
+    const heroSubtitle = document.getElementById('main-hero-subtitle');
+    const pricingCardSubtitles = document.querySelectorAll('.pricing-card p');
+
     if (path === '/etudiant') {
-      document.getElementById('main-hero-title').innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
-      document.getElementById('main-hero-subtitle').textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents en 1 clic.";
+      heroTitle.innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
+      heroSubtitle.textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents de candidature en 1 clic.";
       document.title = "PDFULTIME - Compresser et fusionner pour Étudiants & Concours";
+      
+      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Idéal pour un dossier de dernière minute urgent.";
+      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Parfait pour la saison des concours et des vœux Master.";
+      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Pour toute la durée de vos recherches de formations.";
+
     } else if (path === '/comptable') {
-      document.getElementById('main-hero-title').innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
-      document.getElementById('main-hero-subtitle').textContent = "Gagnez un temps précieux au quotidien en assemblant et nettoyant vos factures et justificatifs pour vos clients.";
+      heroTitle.innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
+      heroSubtitle.textContent = "Gagnez un temps précieux au quotidien en assemblant, compressant et nettoyant vos factures et justificatifs pour vos clients ou bilans.";
       document.title = "PDFULTIME - Outil PDF pour Cabinets Comptables & Gestion";
+
+      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Pour un bouclage de dossier ou une facture isolée.";
+      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Idéal pour la période fiscale et la gestion hebdomadaire.";
+      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Tranquillité totale pour les cabinets et indépendants.";
+
     } else if (path === '/immobilier') {
-      document.getElementById('main-hero-title').innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
-      document.getElementById('main-hero-subtitle').textContent = "Assemblez bail, DPE et pièces d'identité dans l'ordre parfait pour vos propriétaires ou agences immobilières.";
+      heroTitle.innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
+      heroSubtitle.textContent = "Assemblez bail, DPE, états des lieux et pièces d'identité dans l'ordre parfait pour vos propriétaires, acquéreurs ou agences immobilières.";
       document.title = "PDFULTIME - Gestion des dossiers PDF pour l'Immobilier";
+
+      if(pricingCardSubtitles[0]) pricingCardSubtitles[0].textContent = "Parfait pour un dossier de location rapide.";
+      if(pricingCardSubtitles[1]) pricingCardSubtitles[1].textContent = "Idéal pour enchaîner les visites et états des lieux.";
+      if(pricingCardSubtitles[2]) pricingCardSubtitles[2].textContent = "Solution pro pour les agences et gestionnaires de biens.";
     }
 
     async function checkStatus() {
