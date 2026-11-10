@@ -310,7 +310,7 @@
 
       <div class="pricing-grid">
         
-        <!-- PASS 1 -->
+        <!-- PASS 1 (24h - 2.99€) -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-1-title">Pass 24h</h3>
@@ -326,10 +326,10 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-1-btn" href="https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00" class="btn-buy secondary">Prendre le Pass 24h</a>
+          <a id="plan-1-btn" href="https://buy.stripe.com/14A4gA8IpaoE7C84Qp3oA03" class="btn-buy secondary">Prendre le Pass 24h</a>
         </div>
 
-        <!-- PASS 2 -->
+        <!-- PASS 2 (1 Semaine - 4.99€) -->
         <div class="pricing-card popular">
           <div class="badge">Le plus populaire</div>
           <div>
@@ -346,10 +346,10 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-2-btn" href="https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01" class="btn-buy">Prendre le Pass 1 Semaine</a>
+          <a id="plan-2-btn" href="https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02" class="btn-buy">Prendre le Pass 1 Semaine</a>
         </div>
 
-        <!-- PASS 3 -->
+        <!-- PASS 3 (1 Mois - 9.99€) -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-3-title">Pass 1 Mois</h3>
@@ -365,7 +365,7 @@
               <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-3-btn" href="https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
+          <a id="plan-3-btn" href="https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
         </div>
 
       </div>
@@ -445,10 +445,10 @@
       plan3Price.textContent = "9,99 €";
       plan3Btn.textContent = "Prendre le Pass Mois";
 
-      // Liens Stripe Étudiants
-      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
-      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
-      plan3Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
+      // Liens Stripe Live Étudiants
+      plan1Btn.href = "https://buy.stripe.com/14A4gA8IpaoE7C84Qp3oA03";
+      plan2Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
+      plan3Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -509,9 +509,10 @@
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
-      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
+      // Liens Stripe Live Pro (Le 3e bouton passe à 19.99€)
+      plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
+      plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
+      plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -569,9 +570,10 @@
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
-      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
+      // Liens Stripe Live Immo / Pro
+      plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
+      plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
+      plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -580,4 +582,54 @@
         <li><span class="icon-check">✓</span> Extraction d'états des lieux</li>
       `;
       plan2Features.innerHTML = `
-        <li><span class="icon
+        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+        <li><span class="icon-check">✓</span> Création de dossiers illimitée</li>
+        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+        <li><span class="icon-check">✓</span> Modification de baux (Word)</li>
+      `;
+      plan3Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Agence)</li>
+        <li><span class="icon-check">✓</span> Gestionnaire de dossiers illimité</li>
+        <li><span class="icon-check">✓</span> Traitement prioritaire agence</li>
+        <li><span class="icon-check">✓</span> Tous convertisseurs inclus</li>
+        <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
+      `;
+    }
+
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        const trialSpan = document.getElementById("trial-text");
+        
+        if (data.isPaid) {
+          trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
+        } else if (data.trials > 0) {
+          trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
+        } else {
+          trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
+          trialSpan.parentElement.style.borderColor = "#ef4444";
+        }
+      } catch (err) {
+        console.error("Erreur statut", err);
+      }
+    }
+
+    document.querySelectorAll("form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+
+        if (!data.isPaid && data.trials <= 0) {
+          e.preventDefault();
+          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
+          document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    checkStatus();
+  </script>
+
+</body>
+</html>
