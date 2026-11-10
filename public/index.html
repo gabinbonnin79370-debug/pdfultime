@@ -30,7 +30,7 @@
       scroll-behavior: smooth;
     }
 
-    nav {
+    navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -162,44 +162,12 @@
     .btn-buy.secondary { background-color: transparent; border: 1px solid var(--card-border); color: var(--text); }
     .btn-buy.secondary:hover { background-color: rgba(255, 255, 255, 0.05); border-color: var(--text-muted); }
 
-    /* MODALE DE FIN D'ESSAIS */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
-      display: flex; justify-content: center; align-items: center; z-index: 1000;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-    }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
-      padding: 2.5rem; max-width: 450px; width: 90%; text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6); transform: translateY(20px); transition: transform 0.3s ease;
-    }
-    .modal-overlay.active .modal-card { transform: translateY(0); }
-    .modal-icon { font-size: 3rem; margin-bottom: 1rem; }
-    .modal-card h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.75rem; color: #fff; }
-    .modal-card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
-    .modal-buttons { display: flex; flex-direction: column; gap: 0.75rem; }
-
     footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 6rem; font-size: 0.95rem; }
   </style>
 </head>
 <body>
 
-  <!-- POPUP MODALE -->
-  <div id="trialModal" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-icon">⚡</div>
-      <h3>Essais gratuits épuisés !</h3>
-      <p>Vous avez utilisé vos 3 essais gratuits. Choisissez un pass pour continuer à manipuler vos PDF en illimité.</p>
-      <div class="modal-buttons">
-        <button onclick="closeModalAndScroll()" class="btn-action">Voir les Pass & Tarifs</button>
-        <button onclick="closeModal()" class="btn-buy secondary" style="padding: 0.85rem;">Fermer</button>
-      </div>
-    </div>
-  </div>
-
-  <nav>
+  <navbar>
     <div class="nav-left">
       <a href="#" class="logo-container">
         <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,7 +189,7 @@
       <a href="#outils">Outils</a>
       <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
     </div>
-  </nav>
+  </navbar>
 
   <div class="hero">
     <h1>Manipulez vos PDF sans aucune limite</h1>
@@ -253,6 +221,47 @@
         </form>
       </div>
 
+      <!-- EXTRACTION -->
+      <div class="tool-card">
+        <h3>✂️ Extraire des pages</h3>
+        <p>Sélectionnez et conservez uniquement les pages dont vous avez besoin.</p>
+        <form action="/api/extract-pages" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <input type="text" name="pages" placeholder="Pages à garder (ex: 1, 3, 5)" required>
+          <button type="submit" class="btn-action">Extraire les pages</button>
+        </form>
+      </div>
+
+      <!-- COMPRESSION -->
+      <div class="tool-card">
+        <h3>🗜️ Compresser un PDF</h3>
+        <p>Réduisez le poids de votre fichier PDF tout en conservant sa qualité.</p>
+        <form action="/api/compress" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Compresser le fichier</button>
+        </form>
+      </div>
+
+      <!-- CONVERSION WORD -->
+      <div class="tool-card">
+        <h3>🔄 Convertir PDF en Word</h3>
+        <p>Transformez vos PDF en documents Word (.docx) éditables facilement.</p>
+        <form action="/api/convert" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Convertir en Word</button>
+        </form>
+      </div>
+
+      <!-- CONVERSION EXCEL -->
+      <div class="tool-card">
+        <h3>📊 Convertir PDF en Excel</h3>
+        <p>Extrayez les données de vos PDF directement dans un tableau Excel (.xlsx).</p>
+        <form action="/api/convert-excel" method="POST" enctype="multipart/form-data" class="file-input-group">
+          <input type="file" name="pdf" required accept="application/pdf">
+          <button type="submit" class="btn-action">Convertir en Excel</button>
+        </form>
+      </div>
+
     </div>
 
     <div id="tarifs" class="pricing-section">
@@ -267,7 +276,17 @@
         <div class="pricing-card">
           <div>
             <h3>Pass 24h</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
             <div class="price">2,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Traitement ultra-rapide</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
+            </ul>
           </div>
           <button onclick="startCheckout('24h')" class="btn-buy secondary">Prendre le Pass 24h</button>
         </div>
@@ -277,7 +296,17 @@
           <div class="badge">Le plus populaire</div>
           <div>
             <h3>Pass 1 Semaine</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
             <div class="price">4,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
+            </ul>
           </div>
           <button onclick="startCheckout('week')" class="btn-buy">Prendre le Pass 1 Semaine</button>
         </div>
@@ -286,7 +315,17 @@
         <div class="pricing-card">
           <div>
             <h3>Pass 1 Mois</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
             <div class="price">9,99 €</div>
+            <ul class="features">
+              <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
+              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
+              <li><span class="icon-check">✓</span> Extraction de pages</li>
+              <li><span class="icon-check">✓</span> Compression optimisée</li>
+              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+              <li><span class="icon-check">✓</span> Convertisseur PDF ➔ Word/Excel</li>
+              <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
+            </ul>
           </div>
           <button onclick="startCheckout('month')" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
         </div>
@@ -297,7 +336,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 PDFULTIME - Tous droits réservés.</p>
+    <p>&copy; 2026 PDFULTIME - Tous droits réservés. | <a href="/mentions.html" style="color: var(--text-muted); text-decoration: underline;">Mentions Légales & CGV</a></p>
   </footer>
 
   <script>
@@ -313,20 +352,25 @@
           trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
         } else {
           trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
+          trialSpan.parentElement.style.borderColor = "#ef4444";
         }
       } catch (err) {
         console.error("Erreur statut", err);
       }
     }
 
-    function closeModal() {
-      document.getElementById("trialModal").classList.remove("active");
-    }
+    document.querySelectorAll("form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        const res = await fetch('/api/status');
+        const data = await res.json();
 
-    function closeModalAndScroll() {
-      closeModal();
-      document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
-    }
+        if (!data.isPaid && data.trials <= 0) {
+          e.preventDefault();
+          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
+          document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
 
     async function startCheckout(plan) {
       try {
@@ -339,11 +383,10 @@
         if (data.url) {
           window.location.href = data.url;
         } else {
-          alert("Erreur Stripe : " + (data.error || "Impossible de créer la session"));
+          alert("Erreur lors de la redirection vers le paiement.");
         }
       } catch (err) {
         console.error("Erreur checkout", err);
-        alert("Erreur réseau lors de la communication avec le serveur.");
       }
     }
 
