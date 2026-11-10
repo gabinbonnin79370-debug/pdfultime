@@ -33,7 +33,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 app.use((req, res, next) => {
   let userId = req.cookies.pdf_user_id;
   if (!userId) {
-    userId = 'user_' + Math.random().toString(36.substring(2)) + Date.now();
+    userId = 'user_' + Math.random().toString(36).substring(2) + Date.now();
     res.cookie('pdf_user_id', userId, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
   }
   req.userId = userId;
@@ -51,7 +51,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// Route Stripe Checkout
+// Route Stripe Checkout (corrigée sans payment_method_types)
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
     const { plan } = req.body;
@@ -68,14 +68,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
       line_items: [{ price_data: priceData, quantity: 1 }],
       mode: 'payment',
       success_url: `${req.protocol}://${req.get('host')}?success=true`,
       cancel_url: `${req.protocol}://${req.get('host')}?canceled=true`,
     });
 
-    // Activer temporairement le compte en mode test/succès immédiat pour l'exemple
+    // Activer temporairement le compte en mode test/succès immédiat
     db.run(`UPDATE users SET isPaid = 1 WHERE id = ?`, [req.userId]);
 
     res.json({ url: session.url });
