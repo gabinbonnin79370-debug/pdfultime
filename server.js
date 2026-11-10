@@ -206,7 +206,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 // ==========================================
 
 // 1. Fusion de PDF
-app.post('/api/merge', upload.array('files'), checkAccess, async (req, res) => {
+app.post('/api/merge', upload.any(), checkAccess, async (req, res) => {
   try {
     if (!req.files || req.files.length < 2) {
       return res.status(400).json({ error: 'not_enough_files', message: 'Veuillez fournir au moins deux fichiers PDF à fusionner.' });
@@ -220,7 +220,6 @@ app.post('/api/merge', upload.array('files'), checkAccess, async (req, res) => {
       const copiedPages = await mergedPdf.copyPages(pdf, pdf.getIndices());
       copiedPages.forEach((page) => mergedPdf.addPage(page));
       
-      // Nettoyage du fichier temporaire
       fs.unlinkSync(file.path);
     }
 
@@ -236,11 +235,12 @@ app.post('/api/merge', upload.array('files'), checkAccess, async (req, res) => {
   }
 });
 
-// 2. Extraction de pages (paramètre "pages" ou routé vers /api/extract)
-app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, res) => {
+// 2. Extraction de pages
+app.post('/api/extract-pages', upload.any(), checkAccess, async (req, res) => {
   try {
-    if (!req.file || !req.body.pages) return res.status(400).send('Paramètres manquants.');
-    const pdfBytes = fs.readFileSync(req.file.path);
+    const file = req.files && req.files[0];
+    if (!file || !req.body.pages) return res.status(400).send('Paramètres manquants.');
+    const pdfBytes = fs.readFileSync(file.path);
     const pdfDoc = await PDFDocument.load(pdfBytes);
     const subPdf = await PDFDocument.create();
     const pagesInput = req.body.pages.split(',').map(p => parseInt(p.trim()) - 1);
@@ -250,32 +250,30 @@ app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, re
     res.setHeader('Content-Disposition', 'attachment; filename=extrait.pdf');
     res.setHeader('Content-Type', 'application/pdf');
     res.send(Buffer.from(subPdfBytes));
-    fs.unlinkSync(req.file.path);
+    fs.unlinkSync(file.path);
   } catch (error) {
     res.status(500).send('Erreur lors de l’extraction.');
   }
 });
 
-// Route alternative pour l'extraction
-app.post('/api/extract', upload.single('pdf'), checkAccess, (req, res) => {
+app.post('/api/extract', upload.any(), checkAccess, (req, res) => {
   res.json({ success: true, message: "Extraction réussie" });
 });
 
 // 3. Compression de PDF
-app.post('/api/compress', upload.single('file'), checkAccess, async (req, res) => {
+app.post('/api/compress', upload.any(), checkAccess, async (req, res) => {
   try {
-    const fileToProcess = req.file || req.files;
-    if (!fileToProcess) {
+    const file = req.files && req.files[0];
+    if (!file) {
       return res.status(400).json({ error: 'no_file', message: 'Veuillez fournir un fichier PDF à compresser.' });
     }
 
-    const filePath = req.file ? req.file.path : req.files.path;
-    const pdfBytes = fs.readFileSync(filePath);
+    const pdfBytes = fs.readFileSync(file.path);
     const pdfDoc = await PDFDocument.load(pdfBytes);
     
     const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: true });
     
-    fs.unlinkSync(filePath);
+    fs.unlinkSync(file.path);
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=compressed.pdf');
@@ -288,11 +286,19 @@ app.post('/api/compress', upload.single('file'), checkAccess, async (req, res) =
 });
 
 // 4. Conversion PDF vers Word (DOCX)
-app.post('/api/convert', upload.single('pdf'), checkAccess, async (req, res) => {
+app.post('/api/convert', upload.any(), checkAccess, async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send('Fichier manquant.');
-    const pdfBuffer = fs.readFileSync(req.file.path);
+    const file = req.files && req.files[0];
+    if (!file) return res.status(400).send('Fichier manquant.');
+    
+    const pdfBuffer = fs.readFileSync(file.path);
     const pdfData = await pdfParse(pdfBuffer);
+    
+    if (!pdfData.text || pdfData.text.trim() === '') {
+      fs.unlinkSync(file.path);
+      return res.status(400).json({ error: 'empty_pdf', message: "Ce PDF semble être une image scannée, aucun texte n'a pu être extrait." });
+    }
+
     const doc = new Document({
       sections: [{
         children: pdfData.text.split('\n').map(line => new Paragraph({
@@ -301,24 +307,32 @@ app.post('/api/convert', upload.single('pdf'), checkAccess, async (req, res) => 
         }))
       }]
     });
+    
     const b64string = await Packer.toBuffer(doc);
     res.setHeader('Content-Disposition', 'attachment; filename=document-converti.docx');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     res.send(b64string);
-    fs.unlinkSync(req.file.path);
+    fs.unlinkSync(file.path);
   } catch (error) {
+    console.error(error);
     res.status(500).send('Erreur lors de la conversion Word.');
   }
 });
 
 // 5. Conversion PDF vers Excel (XLSX)
-app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, res) => {
+app.post('/api/convert-excel', upload.any(), checkAccess, async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send('Fichier manquant.');
+    const file = req.files && req.files[0];
+    if (!file) return res.status(400).send('Fichier manquant.');
     
-    const pdfBuffer = fs.readFileSync(req.file.path);
+    const pdfBuffer = fs.readFileSync(file.path);
     const pdfData = await pdfParse(pdfBuffer);
     
+    if (!pdfData.text || pdfData.text.trim() === '') {
+      fs.unlinkSync(file.path);
+      return res.status(400).json({ error: 'empty_pdf', message: "Ce PDF semble être une image scannée, aucun texte n'a pu être extrait." });
+    }
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Données PDF');
 
@@ -335,7 +349,7 @@ app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, re
     await workbook.xlsx.write(res);
     res.end();
 
-    fs.unlinkSync(req.file.path);
+    fs.unlinkSync(file.path);
   } catch (error) {
     console.error(error);
     res.status(500).send('Erreur lors de la conversion vers Excel.');
