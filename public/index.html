@@ -482,10 +482,14 @@
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
-      // Liens Stripe Comptables (le Pass 1 Mois pointe vers le lien 19.99€)
-      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
-      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
+      // Adaptation des prix affichés et des liens pour les pros (4.99 / 9.99 / 19.99)
+      plan1Price.textContent = "4,99 €";
+      plan2Price.textContent = "9,99 €";
+      plan3Price.textContent = "19,99 €";
+
+      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01"; // Lien 4.99€ (semaine réutilisé pour 24h pro)
+      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02"; // Lien 9.99€ (mois étudiant réutilisé pour semaine pro)
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03"; // Lien 19.99€ (mois pro)
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -539,10 +543,14 @@
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
-      // Liens Stripe Immobilier (le Pass 1 Mois pointe vers le lien 19.99€)
-      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
-      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
+      // Adaptation des prix affichés et des liens pour l'immobilier (4.99 / 9.99 / 19.99)
+      plan1Price.textContent = "4,99 €";
+      plan2Price.textContent = "9,99 €";
+      plan3Price.textContent = "19,99 €";
+
+      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01"; // Lien 4.99€
+      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02"; // Lien 9.99€
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03"; // Lien 19.99€
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
