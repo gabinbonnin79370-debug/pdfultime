@@ -24,11 +24,24 @@ const upload = multer({ dest: 'uploads/' });
 
 app.use(cookieParser());
 
+// ==========================================
+// SÉCURITÉ MIDDLEWARE EXPRESS JSON & WEBHOOK
+// ==========================================
 app.use((req, res, next) => {
   if (req.originalUrl === '/webhook') {
     next();
   } else {
-    express.json()(req, res, next);
+    express.json({
+      limit: '1mb',
+      verify: (req, res, buf) => {
+        try {
+          JSON.parse(buf);
+        } catch (e) {
+          res.status(400).json({ error: 'Requête JSON invalide' });
+          throw new Error('Invalid JSON');
+        }
+      }
+    })(req, res, next);
   }
 });
 
@@ -148,7 +161,15 @@ app.get('/api/status', async (req, res) => {
 // WEBHOOK STRIPE (Enregistre le type de pass)
 // ==========================================
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  const event = req.body;
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error(`Erreur de signature Webhook : ${err.message}`);
+    return res.status(400).send(`Erreur Webhook : ${err.message}`);
+  }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
@@ -157,7 +178,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
     if (userUuid) {
       const now = Date.now();
-      let durationMs = 30 * 24 * 60 * 60 * 1000; // Par défaut 1 mois ou calcul selon le plan
+      let durationMs = 30 * 24 * 60 * 60 * 1000; // Par défaut 1 mois
 
       if (plan && plan.includes('24h')) durationMs = 24 * 60 * 60 * 1000;
       else if (plan && plan.includes('week')) durationMs = 7 * 24 * 60 * 60 * 1000;
