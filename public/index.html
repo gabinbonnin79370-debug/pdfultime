@@ -30,7 +30,7 @@
       scroll-behavior: smooth;
     }
 
-    navbar {
+    nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -167,9 +167,9 @@
 </head>
 <body>
 
-  <navbar>
+  <nav>
     <div class="nav-left">
-      <a href="#" class="logo-container">
+      <a href="/" class="logo-container">
         <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -189,11 +189,11 @@
       <a href="#outils">Outils</a>
       <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
     </div>
-  </navbar>
+  </nav>
 
   <div class="hero">
-    <h1>Manipulez vos PDF sans aucune limite</h1>
-    <p>Fusionnez, extrayez, compressez et convertissez vos documents en quelques secondes depuis n'importe quel navigateur.</p>
+    <h1 id="main-hero-title">Manipulez vos PDF sans aucune limite</h1>
+    <p id="main-hero-subtitle">Fusionnez, extrayez, compressez et convertissez vos documents en quelques secondes depuis n'importe quel navigateur.</p>
     
     <div class="compatibility-tags">
       <span class="tag">💻 Windows 7, 10, 11</span>
@@ -340,6 +340,22 @@
   </footer>
 
   <script>
+    // --- ROUTEUR FRONT-END POUR LES NICHES (SEO) ---
+    const path = window.location.pathname;
+    if (path === '/etudiant') {
+      document.getElementById('main-hero-title').innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
+      document.getElementById('main-hero-subtitle').textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents en 1 clic.";
+      document.title = "PDFULTIME - Compresser et fusionner pour Étudiants & Concours";
+    } else if (path === '/comptable') {
+      document.getElementById('main-hero-title').innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
+      document.getElementById('main-hero-subtitle').textContent = "Gagnez un temps précieux au quotidien en assemblant et nettoyant vos factures et justificatifs pour vos clients.";
+      document.title = "PDFULTIME - Outil PDF pour Cabinets Comptables & Gestion";
+    } else if (path === '/immobilier') {
+      document.getElementById('main-hero-title').innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
+      document.getElementById('main-hero-subtitle').textContent = "Assemblez bail, DPE et pièces d'identité dans l'ordre parfait pour vos propriétaires ou agences immobilières.";
+      document.title = "PDFULTIME - Gestion des dossiers PDF pour l'Immobilier";
+    }
+
     async function checkStatus() {
       try {
         const res = await fetch('/api/status');
