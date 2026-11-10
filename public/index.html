@@ -218,6 +218,7 @@
     </div>
     <div class="nav-links">
       <a href="#outils">Outils</a>
+      <a href="#avis">Avis</a>
       <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
     </div>
   </nav>
@@ -303,7 +304,7 @@
     </div>
 
     <!-- SECTION AVIS CLIENTS DYNAMIQUE -->
-    <div style="padding-top: 2rem; margin-bottom: 4rem;">
+    <div id="avis" style="padding-top: 2rem; margin-bottom: 4rem;">
       <div class="pricing-header">
         <h2>Ce que pensent nos utilisateurs</h2>
         <p style="color: var(--text-muted);">Avis vérifiés de nos utilisateurs en accès illimité.</p>
@@ -627,7 +628,6 @@
       }
     }
 
-    // Fonction pour charger dynamiquement les avis depuis le backend
     async function loadReviews() {
       try {
         const res = await fetch('/api/reviews');
@@ -635,7 +635,6 @@
         const grid = document.getElementById('reviews-grid');
 
         if (reviews.length === 0) {
-          // Avis de secours par défaut si la base est vide au début
           grid.innerHTML = `
             <div class="pricing-card" style="padding: 2rem;">
               <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
@@ -678,7 +677,7 @@
 
         if (!data.isPaid && data.trials <= 0) {
           e.preventDefault();
-          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
+          alert("Vous avez épuisé vos 5 essais gratuits ! Veuillez choisir un pass pour continuer.");
           document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
         }
       });
