@@ -61,7 +61,7 @@ async function initDB() {
 }
 initDB();
 
-// Nettoyage automatique du dossier uploads toutes les 30 minutes (Supprime les fichiers de plus d'1h)
+// Nettoyage automatique du dossier uploads toutes les 30 minutes
 setInterval(() => {
   fs.readdir(uploadDir, (err, files) => {
     if (err) return;
@@ -207,22 +207,34 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 app.post('/api/merge', upload.array('pdfs'), checkAccess, async (req, res) => {
   try {
-    if (!req.files || req.files.length < 2) return res.status(400).send('Fichiers insuffisants.');
+    if (!req.files || req.files.length < 2) {
+      return res.status(400).send('Veuillez sélectionner au moins 2 fichiers PDF valides.');
+    }
+
     const mergedPdf = await PDFDocument.create();
     for (const file of req.files) {
-      const pdfBytes = fs.readFileSync(file.path);
-      const pdfDoc = await PDFDocument.load(pdfBytes);
-      const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
-      copiedPages.forEach((page) => mergedPdf.addPage(page));
+      try {
+        const pdfBytes = fs.readFileSync(file.path);
+        const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+        const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
+        copiedPages.forEach((page) => mergedPdf.addPage(page));
+      } catch (innerErr) {
+        console.error("Fichier PDF ignoré ou corrompu :", innerErr);
+      }
     }
+
     const mergedPdfBytes = await mergedPdf.save();
     res.setHeader('Content-Disposition', 'attachment; filename=fusionne.pdf');
     res.setHeader('Content-Type', 'application/pdf');
     res.send(Buffer.from(mergedPdfBytes));
+    
     req.files.forEach(file => { try { fs.unlinkSync(file.path); } catch(e){} });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Erreur lors de la fusion.');
+    console.error("Erreur critique fusion:", error);
+    if (req.files) {
+      req.files.forEach(file => { try { fs.unlinkSync(file.path); } catch(e){} });
+    }
+    res.status(500).send('Erreur lors de la fusion des PDF.');
   }
 });
 
@@ -230,7 +242,7 @@ app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, re
   try {
     if (!req.file || !req.body.pages) return res.status(400).send('Paramètres manquants.');
     const pdfBytes = fs.readFileSync(req.file.path);
-    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
     const subPdf = await PDFDocument.create();
     const pagesInput = req.body.pages.split(',').map(p => parseInt(p.trim()) - 1);
     const copiedPages = await subPdf.copyPages(pdfDoc, pagesInput);
@@ -242,6 +254,7 @@ app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, re
     try { fs.unlinkSync(req.file.path); } catch(e){}
   } catch (error) {
     console.error(error);
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e){} }
     res.status(500).send('Erreur lors de l’extraction.');
   }
 });
@@ -250,7 +263,7 @@ app.post('/api/compress', upload.single('pdf'), checkAccess, async (req, res) =>
   try {
     if (!req.file) return res.status(400).send('Fichier manquant.');
     const pdfBytes = fs.readFileSync(req.file.path);
-    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
     const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: true });
     res.setHeader('Content-Disposition', 'attachment; filename=compresse.pdf');
     res.setHeader('Content-Type', 'application/pdf');
@@ -258,6 +271,7 @@ app.post('/api/compress', upload.single('pdf'), checkAccess, async (req, res) =>
     try { fs.unlinkSync(req.file.path); } catch(e){}
   } catch (error) {
     console.error(error);
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e){} }
     res.status(500).send('Erreur lors de la compression.');
   }
 });
@@ -282,6 +296,7 @@ app.post('/api/convert', upload.single('pdf'), checkAccess, async (req, res) => 
     try { fs.unlinkSync(req.file.path); } catch(e){}
   } catch (error) {
     console.error(error);
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e){} }
     res.status(500).send('Erreur lors de la conversion Word.');
   }
 });
@@ -312,6 +327,7 @@ app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, re
     try { fs.unlinkSync(req.file.path); } catch(e){}
   } catch (error) {
     console.error(error);
+    if (req.file) { try { fs.unlinkSync(req.file.path); } catch(e){} }
     res.status(500).send('Erreur lors de la conversion vers Excel.');
   }
 });
