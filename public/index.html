@@ -287,13 +287,13 @@
 
       <div class="pricing-grid">
         
-        <!-- PASS 24H -->
+        <!-- PASS 1 -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-1-title">Pass 24h</h3>
             <p id="plan-1-desc" style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
             <div id="plan-1-price" class="price">2,99 €</div>
-            <ul class="features">
+            <ul id="plan-1-features" class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
               <li><span class="icon-check">✓</span> Extraction de pages</li>
@@ -303,17 +303,17 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-1-btn" onclick="startCheckout('24h')" class="btn-buy secondary">Prendre le Pass 24h</button>
+          <button id="plan-1-btn" class="btn-buy secondary">Prendre le Pass 24h</button>
         </div>
 
-        <!-- PASS 1 SEMAINE -->
+        <!-- PASS 2 -->
         <div class="pricing-card popular">
           <div class="badge">Le plus populaire</div>
           <div>
             <h3 id="plan-2-title">Pass 1 Semaine</h3>
             <p id="plan-2-desc" style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
             <div id="plan-2-price" class="price">4,99 €</div>
-            <ul class="features">
+            <ul id="plan-2-features" class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
               <li><span class="icon-check">✓</span> Extraction de pages</li>
@@ -323,16 +323,16 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-2-btn" onclick="startCheckout('week')" class="btn-buy">Prendre le Pass 1 Semaine</button>
+          <button id="plan-2-btn" class="btn-buy">Prendre le Pass 1 Semaine</button>
         </div>
 
-        <!-- PASS 1 MOIS -->
+        <!-- PASS 3 -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-3-title">Pass 1 Mois</h3>
             <p id="plan-3-desc" style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
             <div id="plan-3-price" class="price">9,99 €</div>
-            <ul class="features">
+            <ul id="plan-3-features" class="features">
               <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
               <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
               <li><span class="icon-check">✓</span> Extraction de pages</li>
@@ -342,7 +342,7 @@
               <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <button id="plan-3-btn" onclick="startCheckout('month')" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
+          <button id="plan-3-btn" class="btn-buy secondary">Prendre le Pass 1 Mois</button>
         </div>
 
       </div>
@@ -355,13 +355,12 @@
   </footer>
 
   <script>
-    // --- ROUTEUR FRONT-END & PERSONNALISATION TOTALE (OUTILS + TARIFS) ---
     const path = window.location.pathname;
 
     const heroTitle = document.getElementById('main-hero-title');
     const heroSubtitle = document.getElementById('main-hero-subtitle');
 
-    // Cartes d'outils
+    // Outils
     const card1Title = document.getElementById('card-1-title');
     const card1Desc = document.getElementById('card-1-desc');
     const card2Title = document.getElementById('card-2-title');
@@ -373,26 +372,34 @@
     const card5Title = document.getElementById('card-5-title');
     const card5Desc = document.getElementById('card-5-desc');
 
-    // Cartes de tarifs
+    // Tarifs & Boutons
     const plan1Title = document.getElementById('plan-1-title');
     const plan1Desc = document.getElementById('plan-1-desc');
+    const plan1Price = document.getElementById('plan-1-price');
     const plan1Btn = document.getElementById('plan-1-btn');
+    const plan1Features = document.getElementById('plan-1-features');
 
     const plan2Title = document.getElementById('plan-2-title');
     const plan2Desc = document.getElementById('plan-2-desc');
+    const plan2Price = document.getElementById('plan-2-price');
     const plan2Btn = document.getElementById('plan-2-btn');
+    const plan2Features = document.getElementById('plan-2-features');
 
     const plan3Title = document.getElementById('plan-3-title');
     const plan3Desc = document.getElementById('plan-3-desc');
+    const plan3Price = document.getElementById('plan-3-price');
     const plan3Btn = document.getElementById('plan-3-btn');
+    const plan3Features = document.getElementById('plan-3-features');
+
+    let p1Key = '24h';
+    let p2Key = 'week';
+    let p3Key = 'month';
 
     if (path === '/etudiant') {
-      // --- ÉTUDIANTS ---
       heroTitle.innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
       heroSubtitle.textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents de candidature en 1 clic.";
       document.title = "PDFULTIME - Compresser et fusionner pour Étudiants & Concours";
       
-      // Outils
       card1Title.innerHTML = "🔗 Dossier de Candidature";
       card1Desc.textContent = "Assemblez CV, lettre de motivation et pièces jointes en un seul PDF propre.";
       card2Title.innerHTML = "✂️ Extraire une Attestation";
@@ -404,26 +411,52 @@
       card5Title.innerHTML = "📊 Tableau de Suivi Vœux";
       card5Desc.textContent = "Exportez vos listes de vœux et données de candidatures en Excel.";
 
-      // Tarifs spécifiques Étudiants
       plan1Title.textContent = "Pass Urgence 24h";
-      plan1Desc.textContent = "Idéal pour valider un dossier la veille de la clôture Parcoursup.";
+      plan1Desc.textContent = "Idéal pour valider un dossier la veille de la clôture.";
+      plan1Price.textContent = "2,99 €";
       plan1Btn.textContent = "Prendre le Pass Urgence";
 
-      plan2Title.textContent = "Pass Concours & Vœux (7j)";
-      plan2Desc.textContent = "Parfait pour toute la période de soumission de vos voeux Master.";
+      plan2Title.textContent = "Pass Concours (7j)";
+      plan2Desc.textContent = "Parfait pour toute la période de soumission de vos vœux.";
+      plan2Price.textContent = "4,99 €";
       plan2Btn.textContent = "Prendre le Pass Semaine";
 
-      plan3Title.textContent = "Pass Année Étudiante (Mois)";
-      plan3Desc.textContent = "Tranquillité totale pour tous vos dossiers de l'année.";
+      plan3Title.textContent = "Pass Année Étudiante";
+      plan3Desc.textContent = "Tranquillité totale pour tous vos dossiers.";
+      plan3Price.textContent = "9,99 €";
       plan3Btn.textContent = "Prendre le Pass Mois";
 
+      plan1Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
+        <li><span class="icon-check">✓</span> Compresseur anti-rejet (2 Mo max)</li>
+        <li><span class="icon-check">✓</span> Fusion rapide CV & Lettre</li>
+        <li><span class="icon-check">✓</span> Extraction de relevés de notes</li>
+        <li class="disabled-feature"><span class="icon-cross">✕</span> Traitement prioritaire</li>
+        <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur Word/Excel</li>
+      `;
+      plan2Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+        <li><span class="icon-check">✓</span> Compresseur anti-rejet illimité</li>
+        <li><span class="icon-check">✓</span> Fusion et organisation de dossiers</li>
+        <li><span class="icon-check">✓</span> Extraction de pages</li>
+        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+        <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur Word/Excel</li>
+      `;
+      plan3Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
+        <li><span class="icon-check">✓</span> Tous les outils débloqués</li>
+        <li><span class="icon-check">✓</span> Compresseur prioritaire</li>
+        <li><span class="icon-check">✓</span> Convertisseur Word & Excel inclus</li>
+        <li><span class="icon-check">✓</span> Support e-mail 24/7</li>
+      `;
+
+      p1Key = '24h'; p2Key = 'week'; p3Key = 'month';
+
     } else if (path === '/comptable') {
-      // --- COMPTABLES ---
       heroTitle.innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
       heroSubtitle.textContent = "Gagnez un temps précieux au quotidien en assemblant, compressant et nettoyant vos factures et justificatifs pour vos clients ou bilans.";
       document.title = "PDFULTIME - Outil PDF pour Cabinets Comptables & Gestion";
 
-      // Outils
       card1Title.innerHTML = "🔗 Fusion de Justificatifs";
       card1Desc.textContent = "Regroupez des dizaines de factures et reçus en un seul grand fichier ordonné.";
       card2Title.innerHTML = "✂️ Extraire une Facture";
@@ -435,26 +468,49 @@
       card5Title.innerHTML = "📊 PDF vers Tableaux Excel";
       card5Desc.textContent = "Extrayez des données chiffrées de factures directement dans un tableur.";
 
-      // Tarifs spécifiques Comptables
       plan1Title.textContent = "Pass Facture 24h";
       plan1Desc.textContent = "Pour un bouclage de dossier ou une facture isolée urgente.";
+      plan1Price.textContent = "4,99 €";
       plan1Btn.textContent = "Prendre le Pass 24h";
 
       plan2Title.textContent = "Pass Semaine Fiscale";
       plan2Desc.textContent = "Idéal pour la période de clôture et la gestion hebdomadaire.";
+      plan2Price.textContent = "9,99 €";
       plan2Btn.textContent = "Prendre le Pass Semaine";
 
       plan3Title.textContent = "Pass Cabinet Pro (1 Mois)";
       plan3Desc.textContent = "Solution pro illimitée pour cabinets et indépendants.";
+      plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
+      plan1Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
+        <li><span class="icon-check">✓</span> Fusion de factures en lot</li>
+        <li><span class="icon-check">✓</span> Compression de liasses</li>
+        <li><span class="icon-check">✓</span> Extraction de reçus</li>
+        <li class="disabled-feature"><span class="icon-cross">✕</span> Conversion Excel avancée</li>
+      `;
+      plan2Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+        <li><span class="icon-check">✓</span> Fusion illimitée de justificatifs</li>
+        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+        <li><span class="icon-check">✓</span> Conversion PDF vers Excel / Word</li>
+      `;
+      plan3Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Pro)</li>
+        <li><span class="icon-check">✓</span> Volume de fusion illimité</li>
+        <li><span class="icon-check">✓</span> Traitement prioritaire cabinet</li>
+        <li><span class="icon-check">✓</span> Convertisseurs pro Word/Excel</li>
+        <li><span class="icon-check">✓</span> Support prioritaire dédié</li>
+      `;
+
+      p1Key = 'comptable_24h'; p2Key = 'comptable_week'; p3Key = 'comptable_month';
+
     } else if (path === '/immobilier') {
-      // --- IMMOBILIER ---
       heroTitle.innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
       heroSubtitle.textContent = "Assemblez bail, DPE, états des lieux et pièces d'identité dans l'ordre parfait pour vos propriétaires, acquéreurs ou agences immobilières.";
       document.title = "PDFULTIME - Gestion des dossiers PDF pour l'Immobilier";
 
-      // Outils
       card1Title.innerHTML = "🔗 Pack Dossier de Location";
       card1Desc.textContent = "Assemblez bail, DPE, pièces d'identité et garanties en un seul dossier prêt.";
       card2Title.innerHTML = "✂️ Extraire un État des Lieux";
@@ -466,18 +522,42 @@
       card5Title.innerHTML = "📊 Export Rôles / Quittances";
       card5Desc.textContent = "Gérez et exportez vos données de suivi de loyers en Excel.";
 
-      // Tarifs spécifiques Immobilier
       plan1Title.textContent = "Pass Visite 24h";
       plan1Desc.textContent = "Parfait pour constituer et envoyer un dossier de location rapide.";
+      plan1Price.textContent = "4,99 €";
       plan1Btn.textContent = "Prendre le Pass 24h";
 
       plan2Title.textContent = "Pass Agence (7 Jours)";
       plan2Desc.textContent = "Idéal pour enchaîner les visites et états des lieux de la semaine.";
+      plan2Price.textContent = "9,99 €";
       plan2Btn.textContent = "Prendre le Pass Semaine";
 
       plan3Title.textContent = "Pass Gestionnaire (1 Mois)";
       plan3Desc.textContent = "Solution pro pour les agences et gestionnaires de biens.";
+      plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
+
+      plan1Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
+        <li><span class="icon-check">✓</span> Pack Dossier de Location</li>
+        <li><span class="icon-check">✓</span> Compression de dossier lourd</li>
+        <li><span class="icon-check">✓</span> Extraction d'états des lieux</li>
+      `;
+      plan2Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
+        <li><span class="icon-check">✓</span> Création de dossiers illimitée</li>
+        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
+        <li><span class="icon-check">✓</span> Modification de baux (Word)</li>
+      `;
+      plan3Features.innerHTML = `
+        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Agence)</li>
+        <li><span class="icon-check">✓</span> Gestionnaire de dossiers illimité</li>
+        <li><span class="icon-check">✓</span> Traitement prioritaire agence</li>
+        <li><span class="icon-check">✓</span> Tous convertisseurs inclus</li>
+        <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
+      `;
+
+      p1Key = 'immo_24h'; p2Key = 'immo_week'; p3Key = 'immo_month';
     }
 
     async function checkStatus() {
@@ -512,12 +592,17 @@
       });
     });
 
-    async function startCheckout(plan) {
+    async function startCheckout(planType) {
+      let targetPlan = planType;
+      if (planType === '24h') targetPlan = p1Key;
+      if (planType === 'week') targetPlan = p2Key;
+      if (planType === 'month') targetPlan = p3Key;
+
       try {
         const response = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan })
+          body: JSON.stringify({ plan: targetPlan })
         });
         const data = await response.json();
         if (data.url) {
@@ -529,6 +614,10 @@
         console.error("Erreur checkout", err);
       }
     }
+
+    plan1Btn.onclick = () => startCheckout('24h');
+    plan2Btn.onclick = () => startCheckout('week');
+    plan3Btn.onclick = () => startCheckout('month');
 
     checkStatus();
   </script>
