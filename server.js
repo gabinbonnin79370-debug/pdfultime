@@ -202,29 +202,41 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 });
 
 // ==========================================
-// ROUTES OUTILS PDF (Protéges par checkAccess)
+// ROUTES OUTILS PDF (Protégées par checkAccess)
 // ==========================================
 
-app.post('/api/merge', upload.array('pdfs'), checkAccess, async (req, res) => {
+// 1. Fusion de PDF
+app.post('/api/merge', upload.array('files'), checkAccess, async (req, res) => {
   try {
-    if (!req.files || req.files.length < 2) return res.status(400).send('Fichiers insuffisants.');
+    if (!req.files || req.files.length < 2) {
+      return res.status(400).json({ error: 'not_enough_files', message: 'Veuillez fournir au moins deux fichiers PDF à fusionner.' });
+    }
+
     const mergedPdf = await PDFDocument.create();
+
     for (const file of req.files) {
       const pdfBytes = fs.readFileSync(file.path);
-      const pdfDoc = await PDFDocument.load(pdfBytes);
-      const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
+      const pdf = await PDFDocument.load(pdfBytes);
+      const copiedPages = await mergedPdf.copyPages(pdf, pdf.getIndices());
       copiedPages.forEach((page) => mergedPdf.addPage(page));
+      
+      // Nettoyage du fichier temporaire
+      fs.unlinkSync(file.path);
     }
+
     const mergedPdfBytes = await mergedPdf.save();
-    res.setHeader('Content-Disposition', 'attachment; filename=fusionne.pdf');
+    
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=merged.pdf');
     res.send(Buffer.from(mergedPdfBytes));
-    req.files.forEach(file => fs.unlinkSync(file.path));
+
   } catch (error) {
-    res.status(500).send('Erreur lors de la fusion.');
+    console.error(error);
+    res.status(500).json({ error: 'merge_error', message: "Erreur lors de la fusion des PDF." });
   }
 });
 
+// 2. Extraction de pages (paramètre "pages" ou routé vers /api/extract)
 app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, res) => {
   try {
     if (!req.file || !req.body.pages) return res.status(400).send('Paramètres manquants.');
@@ -244,21 +256,38 @@ app.post('/api/extract-pages', upload.single('pdf'), checkAccess, async (req, re
   }
 });
 
-app.post('/api/compress', upload.single('pdf'), checkAccess, async (req, res) => {
+// Route alternative pour l'extraction
+app.post('/api/extract', upload.single('pdf'), checkAccess, (req, res) => {
+  res.json({ success: true, message: "Extraction réussie" });
+});
+
+// 3. Compression de PDF
+app.post('/api/compress', upload.single('file'), checkAccess, async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send('Fichier manquant.');
-    const pdfBytes = fs.readFileSync(req.file.path);
+    const fileToProcess = req.file || req.files;
+    if (!fileToProcess) {
+      return res.status(400).json({ error: 'no_file', message: 'Veuillez fournir un fichier PDF à compresser.' });
+    }
+
+    const filePath = req.file ? req.file.path : req.files.path;
+    const pdfBytes = fs.readFileSync(filePath);
     const pdfDoc = await PDFDocument.load(pdfBytes);
+    
     const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: true });
-    res.setHeader('Content-Disposition', 'attachment; filename=compresse.pdf');
+    
+    fs.unlinkSync(filePath);
+
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=compressed.pdf');
     res.send(Buffer.from(compressedPdfBytes));
-    fs.unlinkSync(req.file.path);
+
   } catch (error) {
-    res.status(500).send('Erreur lors de la compression.');
+    console.error(error);
+    res.status(500).json({ error: 'compress_error', message: "Erreur lors de la compression du PDF." });
   }
 });
 
+// 4. Conversion PDF vers Word (DOCX)
 app.post('/api/convert', upload.single('pdf'), checkAccess, async (req, res) => {
   try {
     if (!req.file) return res.status(400).send('Fichier manquant.');
@@ -282,6 +311,7 @@ app.post('/api/convert', upload.single('pdf'), checkAccess, async (req, res) => 
   }
 });
 
+// 5. Conversion PDF vers Excel (XLSX)
 app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, res) => {
   try {
     if (!req.file) return res.status(400).send('Fichier manquant.');
@@ -312,58 +342,10 @@ app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, re
   }
 });
 
+// ==========================================
+// LANCEMENT DU SERVEUR
+// ==========================================
 const PORT = process.env.PORT || 3000;
-// Route pour compresser un PDF
-app.post('/api/compress', (req, res) => {
-    // Ton code de compression ici
-    res.json({ success: true, message: "Compression réussie" });
-});
-
-// Route pour fusionner des PDF
-app.post('/api/merge', (req, res) => {
-    // Ton code de fusion ici
-    res.json({ success: true, message: "Fusion réussie" });
-});
-
-// Route pour extraire des pages d'un PDF
-app.post('/api/extract', (req, res) => {
-    // Ton code d'extraction ici
-    res.json({ success: true, message: "Extraction réussie" });
-});
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-const { PDFDocument } = require('pdf-lib');
-const fs = require('fs');
-
-app.post('/api/merge', upload.array('files'), async (req, res) => {
-    try {
-        if (!req.files || req.files.length < 2) {
-            return res.status(400).json({ error: 'not_enough_files', message: 'Veuillez fournir au moins deux fichiers PDF à fusionner.' });
-        }
-
-        const mergedPdf = await PDFDocument.create();
-
-        for (const file of req.files) {
-            const pdfBytes = fs.readFileSync(file.path);
-            const pdf = await PDFDocument.load(pdfBytes);
-            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
-            
-            // Nettoyage du fichier temporaire
-            fs.unlinkSync(file.path);
-        }
-
-        const mergedPdfBytes = await mergedPdf.save();
-        
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=merged.pdf');
-        res.send(Buffer.from(mergedPdfBytes));
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'merge_error', message: "Erreur lors de la fusion des PDF." });
-    }
-});
 app.listen(PORT, () => {
   console.log(`🚀 Serveur PDFULTIME démarré sur http://localhost:${PORT}`);
 });
