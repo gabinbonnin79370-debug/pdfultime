@@ -330,6 +330,40 @@ app.post('/api/extract', (req, res) => {
     // Ton code d'extraction ici
     res.json({ success: true, message: "Extraction réussie" });
 });
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const { PDFDocument } = require('pdf-lib');
+const fs = require('fs');
+
+app.post('/api/merge', upload.array('files'), async (req, res) => {
+    try {
+        if (!req.files || req.files.length < 2) {
+            return res.status(400).json({ error: 'not_enough_files', message: 'Veuillez fournir au moins deux fichiers PDF à fusionner.' });
+        }
+
+        const mergedPdf = await PDFDocument.create();
+
+        for (const file of req.files) {
+            const pdfBytes = fs.readFileSync(file.path);
+            const pdf = await PDFDocument.load(pdfBytes);
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+            
+            // Nettoyage du fichier temporaire
+            fs.unlinkSync(file.path);
+        }
+
+        const mergedPdfBytes = await mergedPdf.save();
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=merged.pdf');
+        res.send(Buffer.from(mergedPdfBytes));
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'merge_error', message: "Erreur lors de la fusion des PDF." });
+    }
+});
 app.listen(PORT, () => {
   console.log(`🚀 Serveur PDFULTIME démarré sur http://localhost:${PORT}`);
 });
