@@ -216,10 +216,11 @@ app.post('/api/merge', upload.array('pdfs'), checkAccess, async (req, res) => {
       try {
         const pdfBytes = fs.readFileSync(file.path);
         const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-        const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
+        const pageIndices = pdfDoc.getPageIndices();
+        const copiedPages = await mergedPdf.copyPages(pdfDoc, pageIndices);
         copiedPages.forEach((page) => mergedPdf.addPage(page));
       } catch (innerErr) {
-        console.error("Fichier PDF ignoré ou corrompu :", innerErr);
+        console.error("Erreur sur un fichier source :", innerErr);
       }
     }
 
