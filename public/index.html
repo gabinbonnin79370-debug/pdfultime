@@ -303,7 +303,7 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-1-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy secondary">Prendre le Pass 24h</a>
+          <a id="plan-1-btn" href="https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00" class="btn-buy secondary">Prendre le Pass 24h</a>
         </div>
 
         <!-- PASS 2 -->
@@ -323,7 +323,7 @@
               <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-2-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy">Prendre le Pass 1 Semaine</a>
+          <a id="plan-2-btn" href="https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01" class="btn-buy">Prendre le Pass 1 Semaine</a>
         </div>
 
         <!-- PASS 3 -->
@@ -342,7 +342,7 @@
               <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
             </ul>
           </div>
-          <a id="plan-3-btn" href="https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
+          <a id="plan-3-btn" href="https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
         </div>
 
       </div>
@@ -372,7 +372,7 @@
     const card5Title = document.getElementById('card-5-title');
     const card5Desc = document.getElementById('card-5-desc');
 
-    // Tarifs & Boutons
+    // Tarifs & Boutons (liens)
     const plan1Title = document.getElementById('plan-1-title');
     const plan1Desc = document.getElementById('plan-1-desc');
     const plan1Price = document.getElementById('plan-1-price');
@@ -421,6 +421,11 @@
       plan3Desc.textContent = "Tranquillité totale pour tous vos dossiers.";
       plan3Price.textContent = "9,99 €";
       plan3Btn.textContent = "Prendre le Pass Mois";
+
+      // Liens Stripe Étudiants
+      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
+      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
+      plan3Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -477,6 +482,11 @@
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
+      // Liens Stripe Comptables (le Pass 1 Mois pointe vers le lien 19.99€)
+      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
+      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
+
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
         <li><span class="icon-check">✓</span> Fusion de factures en lot</li>
@@ -528,6 +538,11 @@
       plan3Desc.textContent = "Solution pro pour les agences et gestionnaires de biens.";
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
+
+      // Liens Stripe Immobilier (le Pass 1 Mois pointe vers le lien 19.99€)
+      plan1Btn.href = "https://buy.stripe.com/test_eVq4gBdrQ2bK3VI5kLbQY00";
+      plan2Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
