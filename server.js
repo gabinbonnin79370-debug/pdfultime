@@ -334,14 +334,22 @@ app.post('/api/convert-excel', upload.single('pdf'), checkAccess, async (req, re
 });
 
 // ==========================================
-// ROUTES POUR LES PAGES DE NICHES SEO
+// ROUTES POUR LES PAGES DE NICHES SEO & SPA
 // ==========================================
-app.get(['/etudiant', '/comptable', '/immobilier'], (req, res) => {
+app.get('/etudiant', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Route globale de secours (SPA / Index)
-app.get('*', (req, res) => {
+app.get('/comptable', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/immobilier', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Route globale de secours (SPA / Index) - Utilise bien '/*' et non '*'
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
