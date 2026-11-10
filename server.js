@@ -8,6 +8,13 @@ const cookieParser = require('cookie-parser');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy');
 
 const app = express();
+
+// Création automatique du dossier uploads s'il n'existe pas (correction du crash 502)
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 const upload = multer({ dest: 'uploads/' });
 
 app.use(express.json());
@@ -51,7 +58,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// Route Stripe Checkout (corrigée sans payment_method_types)
+// Route Stripe Checkout
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
     const { plan } = req.body;
@@ -109,7 +116,7 @@ app.post('/api/merge', upload.array('pdfs'), checkTrialOrPaid, async (req, res) 
       const pdfDoc = await PDFDocument.load(pdfBytes);
       const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPagesIndices());
       copiedPages.forEach((page) => mergedPdf.addPage(page));
-      fs.unlinkSync(file.path); // Nettoyage
+      fs.unlinkSync(file.path); // Nettoyage du fichier temporaire
     }
 
     const mergedPdfBytes = await mergedPdf.save();
