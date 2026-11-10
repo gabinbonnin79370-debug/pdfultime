@@ -34,17 +34,30 @@ db.serialize(() => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
+
+// -----------------------------------------------------------------
+// ROUTES DES PAGES HTML
+// -----------------------------------------------------------------
 
 // Route principale (Page d'accueil et landing pages par niche)
 app.get(['/', '/etudiant', '/comptable', '/immobilier'], (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Route pour la page de tarifs / Premium
+app.get('/premium', (req, res) => {
+  res.sendFile(path.join(__dirname, 'premium.html'));
+});
+
 // Route de succès après paiement Stripe
 app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'success.html'));
 });
+
+// -----------------------------------------------------------------
+// ROUTES API
+// -----------------------------------------------------------------
 
 // API : Récupérer le statut de l'utilisateur (essais gratuits fixés à 5)
 app.get('/api/status', (req, res) => {
@@ -82,7 +95,9 @@ app.post('/api/compress', upload.single('pdf'), (req, res) => {
   res.send("Fichier compressé avec succès !");
 });
 
-// Lancement du serveur
+// -----------------------------------------------------------------
+// LANCEMENT DU SERVEUR
+// -----------------------------------------------------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur PDFUltime démarré sur le port ${PORT}`);
