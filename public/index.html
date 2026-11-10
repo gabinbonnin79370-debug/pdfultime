@@ -7,6 +7,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Google tag (gtag.js) - Google Ads -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18566107291"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'AW-18566107291');
+  </script>
+
+  <!-- Event snippet for Achat conversion page (Actif uniquement sur /success) -->
+  <script>
+    if (window.location.pathname === '/success') {
+      gtag('event', 'conversion', {
+          'send_to': 'AW-18566107291/YdCyCLyPqLUdEJuhgZVF',
+          'value': 1.0,
+          'currency': 'EUR',
+          'transaction_id': ''
+      });
+    }
+  </script>
+
   <style>
     :root {
       --primary: #2563eb;
@@ -482,14 +505,13 @@
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
-      // Adaptation des prix affichés et des liens pour les pros (4.99 / 9.99 / 19.99)
       plan1Price.textContent = "4,99 €";
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01"; // Lien 4.99€ (semaine réutilisé pour 24h pro)
-      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02"; // Lien 9.99€ (mois étudiant réutilisé pour semaine pro)
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03"; // Lien 19.99€ (mois pro)
+      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
+      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -543,14 +565,13 @@
       plan3Price.textContent = "19,99 €";
       plan3Btn.textContent = "Prendre le Pass Pro";
 
-      // Adaptation des prix affichés et des liens pour l'immobilier (4.99 / 9.99 / 19.99)
       plan1Price.textContent = "4,99 €";
       plan2Price.textContent = "9,99 €";
       plan3Price.textContent = "19,99 €";
 
-      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01"; // Lien 4.99€
-      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02"; // Lien 9.99€
-      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03"; // Lien 19.99€
+      plan1Btn.href = "https://buy.stripe.com/test_4gMaEZfzYdUs77UfZpbQY01";
+      plan2Btn.href = "https://buy.stripe.com/test_aFa9AVfzY3fO77U4gHbQY02";
+      plan3Btn.href = "https://buy.stripe.com/test_00w00lafEbMk77UbJ9bQY03";
 
       plan1Features.innerHTML = `
         <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
@@ -559,54 +580,4 @@
         <li><span class="icon-check">✓</span> Extraction d'états des lieux</li>
       `;
       plan2Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
-        <li><span class="icon-check">✓</span> Création de dossiers illimitée</li>
-        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-        <li><span class="icon-check">✓</span> Modification de baux (Word)</li>
-      `;
-      plan3Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Agence)</li>
-        <li><span class="icon-check">✓</span> Gestionnaire de dossiers illimité</li>
-        <li><span class="icon-check">✓</span> Traitement prioritaire agence</li>
-        <li><span class="icon-check">✓</span> Tous convertisseurs inclus</li>
-        <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
-      `;
-    }
-
-    async function checkStatus() {
-      try {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-        const trialSpan = document.getElementById("trial-text");
-        
-        if (data.isPaid) {
-          trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
-        } else if (data.trials > 0) {
-          trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
-        } else {
-          trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
-          trialSpan.parentElement.style.borderColor = "#ef4444";
-        }
-      } catch (err) {
-        console.error("Erreur statut", err);
-      }
-    }
-
-    document.querySelectorAll("form").forEach(form => {
-      form.addEventListener("submit", async (e) => {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-
-        if (!data.isPaid && data.trials <= 0) {
-          e.preventDefault();
-          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
-          document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
-
-    checkStatus();
-  </script>
-
-</body>
-</html>
+        <li><span class="icon
