@@ -1,731 +1,210 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDFULTIME - Outils PDF en ligne & Accès Illimité</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Google tag (gtag.js) - Google Ads -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18566107291"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'AW-18566107291');
-  </script>
-
-  <!-- Event snippet for Achat conversion page (Actif uniquement sur /success) -->
-  <script>
-    if (window.location.pathname === '/success') {
-      gtag('event', 'conversion', {
-          'send_to': 'AW-18566107291/YdCyCLyPqLUdEJuhgZVF',
-          'value': 1.0,
-          'currency': 'EUR',
-          'transaction_id': ''
-      });
-    }
-  </script>
-
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --accent: #10b981;
-      --danger: #ef4444;
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      scroll-behavior: smooth;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background-color: rgba(30, 41, 59, 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-left { display: flex; align-items: center; gap: 1.5rem; }
-    .logo-container { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-    .logo-svg { width: 40px; height: 40px; }
-    .logo-text { font-size: 1.6rem; font-weight: 800; color: #ffffff; letter-spacing: -0.03em; }
-    .logo-text span {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .nav-badge {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--accent);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 0.35rem 0.9rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    
-    .btn-nav {
-      background-color: var(--primary);
-      color: white !important;
-      padding: 0.6rem 1.4rem;
-      border-radius: 10px;
-      font-weight: 600;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
-    .btn-nav:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-
-    .hero { text-align: center; padding: 4rem 1rem 3rem 1rem; max-width: 900px; margin: 0 auto; }
-    .hero h1 {
-      font-size: 3.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #ffffff 0%, #a3b1c6 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 750px; margin-left: auto; margin-right: auto; }
-
-    .compatibility-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .tag {
-      background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3);
-      color: #93c5fd; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
-    }
-
-    .niche-quick-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
-    .niche-btn {
-      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text);
-      padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none;
-      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.4rem;
-    }
-    .niche-btn:hover { border-color: var(--primary); background: rgba(37, 99, 235, 0.1); transform: translateY(-1px); }
-
-    .trial-banner {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      background: linear-gradient(90deg, rgba(37, 99, 235, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-      border: 1px solid var(--card-border); padding: 0.75rem 1.5rem; border-radius: 30px; font-size: 1rem; font-weight: 600; color: #fff;
-    }
-    .trial-banner span { color: var(--accent); font-weight: 700; }
-
-    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
-
-    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; }
-    .tool-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 2.5rem 2rem;
-      transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    }
-    .tool-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-    .tool-card h3 { font-size: 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
-    .tool-card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; height: 3rem; }
-
-    .file-input-group { display: flex; flex-direction: column; gap: 1.25rem; }
-    input[type="file"], input[type="text"] {
-      background: var(--bg); border: 1px solid var(--card-border); color: var(--text);
-      padding: 0.85rem; border-radius: 10px; width: 100%;
-    }
-    input[type="file"] { cursor: pointer; }
-
-    .btn-action {
-      background-color: var(--primary); color: white; border: none; padding: 0.85rem 1.5rem;
-      border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%;
-      transition: background-color 0.2s, transform 0.1s;
-    }
-    .btn-action:hover { background-color: var(--primary-hover); }
-
-    .security-notice {
-      display: flex; justify-content: center; align-items: center; gap: 0.5rem;
-      color: var(--text-muted); font-size: 0.9rem; margin-bottom: 6rem; text-align: center;
-    }
-
-    /* FAQ Section */
-    .faq-section { margin-bottom: 6rem; border-top: 1px solid var(--card-border); padding-top: 4rem; }
-    .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-    .faq-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 2rem; }
-    .faq-card h4 { font-size: 1.1rem; margin-bottom: 0.75rem; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
-    .faq-card p { color: var(--text-muted); font-size: 0.95rem; }
-
-    .pricing-section { padding-top: 4rem; border-top: 1px solid var(--card-border); }
-    .pricing-header { text-align: center; margin-bottom: 4rem; }
-    .pricing-header h2 { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
-
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 2rem; align-items: start; }
-    .pricing-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 3rem 2rem 2.5rem 2rem;
-      display: flex; flex-direction: column; justify-content: space-between; position: relative;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s;
-    }
-    .pricing-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -15px rgba(0,0,0,0.6); }
-    .pricing-card.popular { border: 2px solid var(--primary); background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, var(--card-bg) 100%); }
-
-    .badge {
-      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); color: white; padding: 6px 20px;
-      font-size: 0.8rem; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-    }
-    .pricing-card h3 { font-size: 1.6rem; margin-bottom: 0.75rem; }
-    .price { font-size: 3rem; font-weight: 800; color: #ffffff; margin: 1.5rem 0; letter-spacing: -0.02em; }
-
-    .features { list-style: none; margin: 2rem 0 3rem 0; }
-    .features li { padding: 0.75rem 0; color: var(--text); display: flex; align-items: center; gap: 0.85rem; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .icon-check { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
-    .icon-cross { color: var(--danger); font-weight: bold; font-size: 1.1rem; }
-    .disabled-feature { color: var(--text-muted); opacity: 0.7; }
-
-    .btn-buy {
-      display: block; text-align: center; background-color: var(--primary); color: white; text-decoration: none;
-      padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.2s, transform 0.1s; cursor: pointer; border: none; width: 100%;
-    }
-    .btn-buy:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-    .btn-buy.secondary { background-color: transparent; border: 1px solid var(--card-border); color: var(--text); }
-    .btn-buy.secondary:hover { background-color: rgba(255, 255, 255, 0.05); border-color: var(--text-muted); }
-
-    footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); border-top: 1px solid var(--card-border); margin-top: 6rem; font-size: 0.95rem; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFUltime - Fusionnez et compressez vos PDF en un clic</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: #0f172a;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        input[type="email"], input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        #actionSection {
+            display: none;
+            margin-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+        .status-badge {
+            background-color: #eff6ff;
+            color: #1e40af;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
-  <nav>
-    <div class="nav-left">
-      <a href="/" class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2563eb" />
-              <stop offset="100%" stop-color="#10b981" />
-            </linearGradient>
-          </defs>
-          <path d="M25 10H60L75 25V80C75 85.5228 70.5228 90 65 90H25C19.4772 90 15 85.5228 15 80V20C15 14.4772 19.4772 10 25 10Z" fill="url(#logoGradient)" />
-          <path d="M60 10V25H75L60 10Z" fill="#1d4ed8" opacity="0.8"/>
-          <path d="M35 35H50C55.5228 35 60 39.4772 60 45V48C60 53.5228 55.5228 58 50 58H42V70H35V35ZM42 51H50C51.6569 51 53 49.6569 53 48V45C53 43.3431 51.6569 42 50 42H42V51Z" fill="white"/>
-        </svg>
-        <div class="logo-text">PDF<span>ULTIME</span></div>
-      </a>
-      <div class="nav-badge"><span>🛡️</span> 100% Sécurisé & Sans Inscription</div>
-    </div>
-    <div class="nav-links">
-      <a href="#outils">Outils</a>
-      <a href="#avis">Avis</a>
-      <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
-    </div>
-  </nav>
+    <div class="card">
+        <h1>PDFUltime</h1>
+        <p class="subtitle">La solution rapide pour vos documents</p>
 
-  <div class="hero">
-    <h1 id="main-hero-title">Manipulez vos PDF sans aucune limite</h1>
-    <p id="main-hero-subtitle">Fusionnez, extrayez, compressez et convertissez vos documents en quelques secondes depuis n'importe quel navigateur.</p>
-    
-    <div class="compatibility-tags">
-      <span class="tag">💻 Windows 7, 10, 11</span>
-      <span class="tag">🍏 macOS</span>
-      <span class="tag">📱 Mobile / Tablette</span>
-      <span class="tag">🌐 Web (Aucun téléchargement requis)</span>
-    </div>
-
-    <!-- Raccourcis rapides pour les niches -->
-    <div class="niche-quick-links">
-      <a href="/etudiant" class="niche-btn">🎓 Espace Étudiants (Parcoursup/Master)</a>
-      <a href="/comptable" class="niche-btn">📊 Espace Comptables & Factures</a>
-      <a href="/immobilier" class="niche-btn">🏠 Espace Immobilier & Location</a>
-    </div>
-
-    <div class="trial-banner">
-      ⚡ <span id="trial-text">Chargement des essais gratuits...</span>
-    </div>
-  </div>
-
-  <div class="container">
-    
-    <div id="outils" class="tools-grid">
-      
-      <!-- FUSION -->
-      <div class="tool-card">
-        <h3 id="card-1-title">🔗 Fusionner des PDF</h3>
-        <p id="card-1-desc">Assemblez plusieurs fichiers PDF en un seul document en 1 clic.</p>
-        <form action="/api/merge" method="POST" enctype="multipart/form-data" class="file-input-group">
-          <input type="file" name="pdfs" multiple required accept="application/pdf">
-          <button type="submit" class="btn-action">Fusionner les fichiers</button>
-        </form>
-      </div>
-
-      <!-- EXTRACTION -->
-      <div class="tool-card">
-        <h3 id="card-2-title">✂️ Extraire des pages</h3>
-        <p id="card-2-desc">Sélectionnez et conservez uniquement les pages dont vous avez besoin.</p>
-        <form action="/api/extract-pages" method="POST" enctype="multipart/form-data" class="file-input-group">
-          <input type="file" name="pdf" required accept="application/pdf">
-          <input type="text" name="pages" placeholder="Pages à garder (ex: 1, 3, 5)" required>
-          <button type="submit" class="btn-action">Extraire les pages</button>
-        </form>
-      </div>
-
-      <!-- COMPRESSION -->
-      <div class="tool-card">
-        <h3 id="card-3-title">🗜️ Compresser un PDF</h3>
-        <p id="card-3-desc">Réduisez le poids de votre fichier PDF tout en conservant sa qualité.</p>
-        <form action="/api/compress" method="POST" enctype="multipart/form-data" class="file-input-group">
-          <input type="file" name="pdf" required accept="application/pdf">
-          <button type="submit" class="btn-action">Compresser le fichier</button>
-        </form>
-      </div>
-
-      <!-- CONVERSION WORD -->
-      <div class="tool-card">
-        <h3 id="card-4-title">🔄 Convertir PDF en Word</h3>
-        <p id="card-4-desc">Transformez vos PDF en documents Word (.docx) éditables facilement.</p>
-        <form action="/api/convert" method="POST" enctype="multipart/form-data" class="file-input-group">
-          <input type="file" name="pdf" required accept="application/pdf">
-          <button type="submit" class="btn-action">Convertir en Word</button>
-        </form>
-      </div>
-
-      <!-- CONVERSION EXCEL -->
-      <div class="tool-card">
-        <h3 id="card-5-title">📊 Convertir PDF en Excel</h3>
-        <p id="card-5-desc">Extrayez les données de vos PDF directement dans un tableau Excel (.xlsx).</p>
-        <form action="/api/convert-excel" method="POST" enctype="multipart/form-data" class="file-input-group">
-          <input type="file" name="pdf" required accept="application/pdf">
-          <button type="submit" class="btn-action">Convertir en Excel</button>
-        </form>
-      </div>
-
-    </div>
-
-    <!-- Badge de sécurité / confidentialité rassurant -->
-    <div class="security-notice">
-      🔒 Chiffrement SSL 256-bits — Vos fichiers sont traités en toute confidentialité et supprimés automatiquement après traitement.
-    </div>
-
-    <!-- SECTION AVIS CLIENTS DYNAMIQUE -->
-    <div id="avis" style="padding-top: 2rem; margin-bottom: 6rem;">
-      <div class="pricing-header">
-        <h2>Ce que pensent nos utilisateurs</h2>
-        <p style="color: var(--text-muted);">Avis vérifiés de nos utilisateurs en accès illimité.</p>
-      </div>
-      <div id="reviews-grid" class="pricing-grid">
-        <!-- Les avis s'injecteront dynamiquement ici -->
-        <div class="pricing-card" style="padding: 2rem; text-align: center; color: var(--text-muted);">
-          Chargement des avis...
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION FAQ CHIRURGICALE -->
-    <div class="faq-section">
-      <div class="pricing-header" style="margin-bottom: 2rem;">
-        <h2>Questions fréquentes</h2>
-        <p style="color: var(--text-muted);">Tout ce que vous devez savoir avant de commencer.</p>
-      </div>
-      <div class="faq-grid">
-        <div class="faq-card">
-          <h4>🔒 Mes documents sont-ils en sécurité ?</h4>
-          <p>Oui, à 100%. Vos fichiers sont traités de manière sécurisée et sont automatiquement supprimés de nos serveurs quelques heures après votre manipulation.</p>
-        </div>
-        <div class="faq-card">
-          <h4>💳 Est-ce un abonnement caché ?</h4>
-          <p>Absolument pas. Tous nos Pass sont des paiements uniques. Aucun prélèvement automatique, aucun renouvellement forcé.</p>
-        </div>
-        <div class="faq-card">
-          <h4>⚡ Comment récupérer mon accès après paiement ?</h4>
-          <p>C'est instantané ! Dès que votre paiement est validé sur Stripe, vous êtes redirigé vers notre site et vos outils se débloquent automatiquement sur votre navigateur.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION TARIFS -->
-    <div id="tarifs" class="pricing-section">
-      <div class="pricing-header">
-        <h2>Pass & Tarifs d'Accès</h2>
-        <p style="color: var(--text-muted);">Débloquez l'accès illimité instantanément. Aucun abonnement caché.</p>
-      </div>
-
-      <div class="pricing-grid">
-        
-        <!-- PASS 1 (24h - 2.99€) -->
-        <div class="pricing-card">
-          <div>
-            <h3 id="plan-1-title">Pass 24h</h3>
-            <p id="plan-1-desc" style="color: var(--text-muted); font-size: 0.9rem;">Parfait pour un besoin ponctuel urgent.</p>
-            <div id="plan-1-price" class="price">2,99 €</div>
-            <ul id="plan-1-features" class="features">
-              <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
-              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
-              <li><span class="icon-check">✓</span> Extraction de pages</li>
-              <li><span class="icon-check">✓</span> Compression optimisée</li>
-              <li class="disabled-feature"><span class="icon-cross">✕</span> Traitement ultra-rapide</li>
-              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
-              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
-            </ul>
-          </div>
-          <a id="plan-1-btn" href="https://buy.stripe.com/14A4gA8IpaoE7C84Qp3oA03" class="btn-buy secondary">Prendre le Pass 24h</a>
-        </div>
-
-        <!-- PASS 2 (1 Semaine - 4.99€) -->
-        <div class="pricing-card popular">
-          <div class="badge">Le plus populaire</div>
-          <div>
-            <h3 id="plan-2-title">Pass 1 Semaine</h3>
-            <p id="plan-2-desc" style="color: var(--text-muted); font-size: 0.9rem;">Idéal pour vos projets de la semaine.</p>
-            <div id="plan-2-price" class="price">4,99 €</div>
-            <ul id="plan-2-features" class="features">
-              <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
-              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
-              <li><span class="icon-check">✓</span> Extraction de pages</li>
-              <li><span class="icon-check">✓</span> Compression optimisée</li>
-              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-              <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur PDF ➔ Word/Excel</li>
-              <li class="disabled-feature"><span class="icon-cross">✕</span> Support prioritaire 24/7</li>
-            </ul>
-          </div>
-          <a id="plan-2-btn" href="https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02" class="btn-buy">Prendre le Pass 1 Semaine</a>
-        </div>
-
-        <!-- PASS 3 (1 Mois - 9.99€) -->
-        <div class="pricing-card">
-          <div>
-            <h3 id="plan-3-title">Pass 1 Mois</h3>
-            <p id="plan-3-desc" style="color: var(--text-muted); font-size: 0.9rem;">Tranquillité totale pour les professionnels.</p>
-            <div id="plan-3-price" class="price">9,99 €</div>
-            <ul id="plan-3-features" class="features">
-              <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
-              <li><span class="icon-check">✓</span> Fusion de fichiers illimitée</li>
-              <li><span class="icon-check">✓</span> Extraction de pages</li>
-              <li><span class="icon-check">✓</span> Compression optimisée</li>
-              <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-              <li><span class="icon-check">✓</span> Convertisseur PDF ➔ Word/Excel</li>
-              <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
-            </ul>
-          </div>
-          <a id="plan-3-btn" href="https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01" class="btn-buy secondary">Prendre le Pass 1 Mois</a>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <footer>
-    <p>&copy; 2026 PDFULTIME - Tous droits réservés. | <a href="/mentions.html" style="color: var(--text-muted); text-decoration: underline;">Mentions Légales & CGV</a></p>
-  </footer>
-
-  <script>
-    const path = window.location.pathname;
-
-    const heroTitle = document.getElementById('main-hero-title');
-    const heroSubtitle = document.getElementById('main-hero-subtitle');
-
-    // Outils
-    const card1Title = document.getElementById('card-1-title');
-    const card1Desc = document.getElementById('card-1-desc');
-    const card2Title = document.getElementById('card-2-title');
-    const card2Desc = document.getElementById('card-2-desc');
-    const card3Title = document.getElementById('card-3-title');
-    const card3Desc = document.getElementById('card-3-desc');
-    const card4Title = document.getElementById('card-4-title');
-    const card4Desc = document.getElementById('card-4-desc');
-    const card5Title = document.getElementById('card-5-title');
-    const card5Desc = document.getElementById('card-5-desc');
-
-    // Tarifs & Boutons (liens)
-    const plan1Title = document.getElementById('plan-1-title');
-    const plan1Desc = document.getElementById('plan-1-desc');
-    const plan1Price = document.getElementById('plan-1-price');
-    const plan1Btn = document.getElementById('plan-1-btn');
-    const plan1Features = document.getElementById('plan-1-features');
-
-    const plan2Title = document.getElementById('plan-2-title');
-    const plan2Desc = document.getElementById('plan-2-desc');
-    const plan2Price = document.getElementById('plan-2-price');
-    const plan2Btn = document.getElementById('plan-2-btn');
-    const plan2Features = document.getElementById('plan-2-features');
-
-    const plan3Title = document.getElementById('plan-3-title');
-    const plan3Desc = document.getElementById('plan-3-desc');
-    const plan3Price = document.getElementById('plan-3-price');
-    const plan3Btn = document.getElementById('plan-3-btn');
-    const plan3Features = document.getElementById('plan-3-features');
-
-    if (path === '/etudiant') {
-      heroTitle.innerHTML = "Compresse ton dossier Parcoursup ou Master <span style='color: var(--accent);'>sous la limite</span>";
-      heroSubtitle.textContent = "Fini les rejets de dossiers à cause d'un fichier trop lourd (2 Mo max). Fusionne et allège tes documents de candidature en 1 clic.";
-      document.title = "PDFULTIME - Compresser et fusionner pour Étudiants & Concours";
-      
-      card1Title.innerHTML = "🔗 Dossier de Candidature";
-      card1Desc.textContent = "Assemblez CV, lettre de motivation et pièces jointes en un seul PDF propre.";
-      card2Title.innerHTML = "✂️ Extraire une Attestation";
-      card2Desc.textContent = "Isolez rapidement la page exacte de votre relevé de notes ou diplôme.";
-      card3Title.innerHTML = "🗜️ Compresseur Anti-Rejet";
-      card3Desc.textContent = "Réduisez le poids de votre dossier exactement sous la limite des 2 Mo.";
-      card4Title.innerHTML = "🔄 Convertir CV en Word";
-      card4Desc.textContent = "Modifiez ou adaptez facilement un ancien CV ou modèle de lettre.";
-      card5Title.innerHTML = "📊 Tableau de Suivi Vœux";
-      card5Desc.textContent = "Exportez vos listes de vœux et données de candidatures en Excel.";
-
-      plan1Title.textContent = "Pass Urgence 24h";
-      plan1Desc.textContent = "Idéal pour valider un dossier la veille de la clôture.";
-      plan1Price.textContent = "2,99 €";
-      plan1Btn.textContent = "Prendre le Pass Urgence";
-
-      plan2Title.textContent = "Pass Concours (7j)";
-      plan2Desc.textContent = "Parfait pour toute la période de soumission de vos vœux.";
-      plan2Price.textContent = "4,99 €";
-      plan2Btn.textContent = "Prendre le Pass Semaine";
-
-      plan3Title.textContent = "Pass Année Étudiante";
-      plan3Desc.textContent = "Tranquillité totale pour tous vos dossiers.";
-      plan3Price.textContent = "9,99 €";
-      plan3Btn.textContent = "Prendre le Pass Mois";
-
-      // Liens Stripe Live Étudiants
-      plan1Btn.href = "https://buy.stripe.com/14A4gA8IpaoE7C84Qp3oA03";
-      plan2Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
-      plan3Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
-
-      plan1Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
-        <li><span class="icon-check">✓</span> Compresseur anti-rejet (2 Mo max)</li>
-        <li><span class="icon-check">✓</span> Fusion rapide CV & Lettre</li>
-        <li><span class="icon-check">✓</span> Extraction de relevés de notes</li>
-        <li class="disabled-feature"><span class="icon-cross">✕</span> Traitement prioritaire</li>
-        <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur Word/Excel</li>
-      `;
-      plan2Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
-        <li><span class="icon-check">✓</span> Compresseur anti-rejet illimité</li>
-        <li><span class="icon-check">✓</span> Fusion et organisation de dossiers</li>
-        <li><span class="icon-check">✓</span> Extraction de pages</li>
-        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-        <li class="disabled-feature"><span class="icon-cross">✕</span> Convertisseur Word/Excel</li>
-      `;
-      plan3Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours</li>
-        <li><span class="icon-check">✓</span> Tous les outils débloqués</li>
-        <li><span class="icon-check">✓</span> Compresseur prioritaire</li>
-        <li><span class="icon-check">✓</span> Convertisseur Word & Excel inclus</li>
-        <li><span class="icon-check">✓</span> Support e-mail 24/7</li>
-      `;
-
-    } else if (path === '/comptable') {
-      heroTitle.innerHTML = "Fusionnez vos pièces comptables <span style='color: var(--accent);'>en un seul fichier</span>";
-      heroSubtitle.textContent = "Gagnez un temps précieux au quotidien en assemblant, compressant et nettoyant vos factures et justificatifs pour vos clients ou bilans.";
-      document.title = "PDFULTIME - Outil PDF pour Cabinets Comptables & Gestion";
-
-      card1Title.innerHTML = "🔗 Fusion de Justificatifs";
-      card1Desc.textContent = "Regroupez des dizaines de factures et reçus en un seul grand fichier ordonné.";
-      card2Title.innerHTML = "✂️ Extraire une Facture";
-      card2Desc.textContent = "Isolez une page spécifique d'un grand livre ou rapport financier.";
-      card3Title.innerHTML = "🗜️ Compression de Liasses";
-      card3Desc.textContent = "Allégez rapidement vos dossiers volumineux pour les envoyer par e-mail.";
-      card4Title.innerHTML = "🔄 PDF vers Word Pro";
-      card4Desc.textContent = "Transformez des rapports PDF en documents modifiables.";
-      card5Title.innerHTML = "📊 PDF vers Tableaux Excel";
-      card5Desc.textContent = "Extrayez des données chiffrées de factures directement dans un tableur.";
-
-      plan1Title.textContent = "Pass Facture 24h";
-      plan1Desc.textContent = "Pour un bouclage de dossier ou une facture isolée urgente.";
-      plan1Price.textContent = "4,99 €";
-      plan1Btn.textContent = "Prendre le Pass 24h";
-
-      plan2Title.textContent = "Pass Semaine Fiscale";
-      plan2Desc.textContent = "Idéal pour la période de clôture et la gestion hebdomadaire.";
-      plan2Price.textContent = "9,99 €";
-      plan2Btn.textContent = "Prendre le Pass Semaine";
-
-      plan3Title.textContent = "Pass Cabinet Pro (1 Mois)";
-      plan3Desc.textContent = "Solution pro illimitée pour cabinets et indépendants.";
-      plan3Price.textContent = "19,99 €";
-      plan3Btn.textContent = "Prendre le Pass Pro";
-
-      plan1Price.textContent = "4,99 €";
-      plan2Price.textContent = "9,99 €";
-      plan3Price.textContent = "19,99 €";
-
-      plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
-      plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
-      plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
-
-      plan1Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
-        <li><span class="icon-check">✓</span> Fusion de factures en lot</li>
-        <li><span class="icon-check">✓</span> Compression de liasses</li>
-        <li><span class="icon-check">✓</span> Extraction de reçus</li>
-        <li class="disabled-feature"><span class="icon-cross">✕</span> Conversion Excel avancée</li>
-      `;
-      plan2Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
-        <li><span class="icon-check">✓</span> Fusion illimitée de justificatifs</li>
-        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-        <li><span class="icon-check">✓</span> Conversion PDF vers Excel / Word</li>
-      `;
-      plan3Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Pro)</li>
-        <li><span class="icon-check">✓</span> Volume de fusion illimité</li>
-        <li><span class="icon-check">✓</span> Traitement prioritaire cabinet</li>
-        <li><span class="icon-check">✓</span> Convertisseurs pro Word/Excel</li>
-        <li><span class="icon-check">✓</span> Support prioritaire dédié</li>
-      `;
-
-    } else if (path === '/immobilier') {
-      heroTitle.innerHTML = "Constituez vos dossiers de location <span style='color: var(--accent);'>en 1 clic</span>";
-      heroSubtitle.textContent = "Assemblez bail, DPE, états des lieux et pièces d'identité dans l'ordre parfait pour vos propriétaires, acquéreurs ou agences immobilières.";
-      document.title = "PDFULTIME - Gestion des dossiers PDF pour l'Immobilier";
-
-      card1Title.innerHTML = "🔗 Pack Dossier de Location";
-      card1Desc.textContent = "Assemblez bail, DPE, pièces d'identité et garanties en un seul dossier prêt.";
-      card2Title.innerHTML = "✂️ Extraire un État des Lieux";
-      card2Desc.textContent = "Extrayez les pages de signature ou de constat d'un rapport technique.";
-      card3Title.innerHTML = "🗜️ Alléger un Dossier lourd";
-      card3Desc.textContent = "Compressez un dossier de location complet pour respecter les limites d'envoi.";
-      card4Title.innerHTML = "🔄 Bail vers Word";
-      card4Desc.textContent = "Modifiez rapidement des clauses ou des modèles de contrats de bail.";
-      card5Title.innerHTML = "📊 Export Rôles / Quittances";
-      card5Desc.textContent = "Gérez et exportez vos données de suivi de loyers en Excel.";
-
-      plan1Title.textContent = "Pass Visite 24h";
-      plan1Desc.textContent = "Parfait pour constituer et envoyer un dossier de location rapide.";
-      plan1Price.textContent = "4,99 €";
-      plan1Btn.textContent = "Prendre le Pass 24h";
-
-      plan2Title.textContent = "Pass Agence (7 Jours)";
-      plan2Desc.textContent = "Idéal pour enchaîner les visites et états des lieux de la semaine.";
-      plan2Price.textContent = "9,99 €";
-      plan2Btn.textContent = "Prendre le Pass Semaine";
-
-      plan3Title.textContent = "Pass Gestionnaire (1 Mois)";
-      plan3Desc.textContent = "Solution pro pour les agences et gestionnaires de biens.";
-      plan3Price.textContent = "19,99 €";
-      plan3Btn.textContent = "Prendre le Pass Pro";
-
-      plan1Price.textContent = "4,99 €";
-      plan2Price.textContent = "9,99 €";
-      plan3Price.textContent = "19,99 €";
-
-      plan1Btn.href = "https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02";
-      plan2Btn.href = "https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01";
-      plan3Btn.href = "https://buy.stripe.com/dRm28s6AhcwM4pWfv33oA00";
-
-      plan1Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 24h</li>
-        <li><span class="icon-check">✓</span> Pack Dossier de Location</li>
-        <li><span class="icon-check">✓</span> Compression de dossier lourd</li>
-        <li><span class="icon-check">✓</span> Extraction d'états des lieux</li>
-      `;
-      plan2Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 7 jours</li>
-        <li><span class="icon-check">✓</span> Création de dossiers illimitée</li>
-        <li><span class="icon-check">✓</span> Traitement ultra-rapide</li>
-        <li><span class="icon-check">✓</span> Modification de baux (Word)</li>
-      `;
-      plan3Features.innerHTML = `
-        <li><span class="icon-check">✓</span> Accès illimité pendant 30 jours (Agence)</li>
-        <li><span class="icon-check">✓</span> Gestionnaire de dossiers illimité</li>
-        <li><span class="icon-check">✓</span> Traitement prioritaire agence</li>
-        <li><span class="icon-check">✓</span> Tous convertisseurs inclus</li>
-        <li><span class="icon-check">✓</span> Support prioritaire 24/7</li>
-      `;
-    }
-
-    async function checkStatus() {
-      try {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-        const trialSpan = document.getElementById("trial-text");
-        
-        if (data.isPaid) {
-          trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
-        } else if (data.trials > 0) {
-          trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
-        } else {
-          trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
-          trialSpan.parentElement.style.borderColor = "#ef4444";
-        }
-      } catch (err) {
-        console.error("Erreur statut", err);
-      }
-    }
-
-    async function loadReviews() {
-      try {
-        const res = await fetch('/api/reviews');
-        const reviews = await res.json();
-        const grid = document.getElementById('reviews-grid');
-
-        if (reviews.length === 0) {
-          grid.innerHTML = `
-            <div class="pricing-card" style="padding: 2rem;">
-              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
-              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Mon dossier de master était rejeté à cause du poids. Le compresseur l'a allégé parfaitement en un clic !"</p>
-              <div style="font-weight: 700; font-size: 0.9rem;">Lucas M. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Pass Étudiant)</span></div>
+        <!-- Étape 1 : Saisie de l'e-mail -->
+        <div id="emailSection" class="form-group">
+            <label for="userEmail">Entrez votre e-mail pour commencer :</label>
+            <input type="email" id="userEmail" placeholder="votre@email.com" required>
+            <div style="margin-top: 1rem;">
+                <button type="button" id="verifyEmailBtn">Valider et tester</button>
             </div>
-            <div class="pricing-card" style="padding: 2rem;">
-              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
-              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Ultra rapide pour fusionner toutes mes factures mensuelles en un seul fichier propre. Top !"</p>
-              <div style="font-weight: 700; font-size: 0.9rem;">Sophie R. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Pass Pro)</span></div>
-            </div>
-            <div class="pricing-card" style="padding: 2rem;">
-              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
-              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"Super pratique pour assembler les baux et états des lieux. Rien à redire, ça marche super bien."</p>
-              <div style="font-weight: 700; font-size: 0.9rem;">Marc D. <span style="color: var(--accent); font-weight: 400; font-size: 0.8rem;">(Immobilier)</span></div>
-            </div>
-          `;
-          return;
-        }
+        </div>
 
-        grid.innerHTML = '';
-        reviews.forEach(rev => {
-          grid.innerHTML += `
-            <div class="pricing-card" style="padding: 2rem;">
-              <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">${'★'.repeat(rev.rating)}${'☆'.repeat(5 - rev.rating)}</div>
-              <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem;">"${rev.comment}"</p>
-              <div style="font-weight: 700; font-size: 0.9rem;">${rev.name}</div>
-            </div>
-          `;
+        <!-- Étape 2 : Zone de fusion (cachée tant que l'email n'est pas validé) -->
+        <div id="actionSection">
+            <div id="statusInfo" class="status-badge"></div>
+
+            <form id="pdfForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="pdfFiles">Sélectionnez vos fichiers PDF :</label>
+                    <input type="file" id="pdfFiles" name="pdfs" multiple accept=".pdf" required>
+                </div>
+                <button type="submit" id="submitBtn">Fusionner les PDF</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let userEmailValid = "";
+
+        // 1. Validation de l'e-mail et récupération du statut
+        document.getElementById('verifyEmailBtn').addEventListener('click', async () => {
+            const emailInput = document.getElementById('userEmail').value.trim();
+            if (!emailInput || !emailInput.includes('@')) {
+                alert("Veuillez entrer une adresse e-mail valide.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/register-trial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    userEmailValid = emailInput;
+                    document.getElementById('emailSection').style.display = 'none';
+                    document.getElementById('actionSection').style.display = 'block';
+
+                    const statusInfo = document.getElementById('statusInfo');
+                    if (data.trialsRemaining > 0) {
+                        statusInfo.innerText = `Il vous reste ${data.trialsRemaining} essai(s) gratuit(s).`;
+                    } else {
+                        statusInfo.innerText = "Vous avez épuisé vos 5 essais gratuits !";
+                        triggerPaywall();
+                    }
+                } else {
+                    alert(data.error || "Erreur lors de la validation.");
+                }
+            } catch (err) {
+                console.error("Erreur technique :", err);
+                alert("Erreur de connexion au serveur.");
+            }
         });
-      } catch (err) {
-        console.error("Erreur chargement avis", err);
-      }
-    }
 
-    document.querySelectorAll("form").forEach(form => {
-      form.addEventListener("submit", async (e) => {
-        const res = await fetch('/api/status');
-        const data = await res.json();
+        // 2. Soumission des fichiers pour la fusion
+        document.getElementById('pdfForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!userEmailValid) {
+                alert("Veuillez d'abord valider votre e-mail.");
+                return;
+            }
 
-        if (!data.isPaid && data.trials <= 0) {
-          e.preventDefault();
-          alert("Vous avez épuisé vos 5 essais gratuits ! Veuillez choisir un pass pour continuer.");
-          document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
+            const fileInput = document.getElementById('pdfFiles');
+            if (fileInput.files.length === 0) {
+                alert("Veuillez sélectionner au moins un fichier PDF.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('email', userEmailValid);
+            for (let file of fileInput.files) {
+                formData.append('pdfs', file);
+            }
+
+            try {
+                const response = await fetch('/api/merge', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    // Recharge la page ou met à jour l'interface après succès
+                    location.reload();
+                } else {
+                    alert(result.error);
+                    if (response.status === 403) {
+                        triggerPaywall();
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur réseau :", err);
+                alert("Une erreur est survenue lors de l'envoi.");
+            }
+        });
+
+        // 3. Redirection automatique vers la page de paiement Stripe
+        function triggerPaywall() {
+            const goToPremium = confirm("Vous avez atteint votre limite de 5 essais gratuits.\n\nVoulez-vous débloquer l'accès illimité pour seulement 2,99 € ?");
+            if (goToPremium) {
+                window.location.href = '/premium';
+            }
         }
-      });
-    });
-
-    checkStatus();
-    loadReviews();
-  </script>
-
+    </script>
 </body>
 </html>
