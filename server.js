@@ -11,30 +11,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuration de la base de données SQLite
-const dbFile = path.join(__dirname, 'database.sqlite');
+// Chemin absolu pour la base de données (sécurisé pour Render)
+const dbFile = path.resolve(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
-    console.error('Erreur d\'ouverture de la base de données', err.message);
+    console.error('Erreur d\'ouverture de la base de données :', err.message);
   } else {
-    console.log('Connecté à la base de données SQLite.');
+    console.log('Connecté à la base de données SQLite sur :', dbFile);
     
-    // Création des tables immédiatement à la connexion
+    // Création de la table users
     db.run(`CREATE TABLE IF NOT EXISTS users (
       email TEXT PRIMARY KEY,
       trials_count INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
       if (err) console.error("Erreur création table users:", err.message);
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS reviews (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      rating INTEGER,
-      comment TEXT
-    )`, (err) => {
-      if (err) console.error("Erreur création table reviews:", err.message);
+      else console.log("Table 'users' prête.");
     });
   }
 });
@@ -70,14 +62,14 @@ app.post('/api/auth/register-trial', (req, res) => {
   db.get(`SELECT trials_count FROM users WHERE email = ?`, [email], (err, row) => {
     if (err) {
       console.error("Erreur SQL SELECT:", err.message);
-      return res.status(500).json({ error: "Erreur serveur SQL" });
+      return res.status(500).json({ error: "Erreur SQL SELECT: " + err.message });
     }
 
     if (!row) {
       db.run(`INSERT INTO users (email, trials_count) VALUES (?, 0)`, [email], (err) => {
         if (err) {
           console.error("Erreur SQL INSERT:", err.message);
-          return res.status(500).json({ error: "Erreur serveur SQL" });
+          return res.status(500).json({ error: "Erreur SQL INSERT: " + err.message });
         }
         res.json({ success: true, trialsRemaining: 5 });
       });
@@ -103,7 +95,7 @@ app.post('/api/merge', upload.array('pdfs'), (req, res) => {
     }
 
     db.run(`UPDATE users SET trials_count = trials_count + 1 WHERE email = ?`, [email], (err) => {
-      if (err) console.error(err);
+      if (err) console.error("Erreur SQL UPDATE:", err.message);
       res.json({ success: true, message: "Fichiers fusionnés avec succès !" });
     });
   });
@@ -124,7 +116,7 @@ app.post('/api/compress', upload.single('pdf'), (req, res) => {
     }
 
     db.run(`UPDATE users SET trials_count = trials_count + 1 WHERE email = ?`, [email], (err) => {
-      if (err) console.error(err);
+      if (err) console.error("Erreur SQL UPDATE:", err.message);
       res.json({ success: true, message: "Fichier compressé avec succès !" });
     });
   });
