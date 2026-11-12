@@ -7,55 +7,59 @@ const fs = require('fs');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Chemin absolu pour la base de données (sécurisé pour Render)
-const dbFile = path.resolve(__dirname, 'database.sqlite');
+// Configuration de la base de données SQLite
+const dbFile = path.join(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
-    console.error('Erreur d\'ouverture de la base de données :', err.message);
+    console.error('Erreur d\'ouverture de la base de données', err.message);
   } else {
-    console.log('Connecté à la base de données SQLite sur :', dbFile);
-    
-    // On recrée proprement la table users pour éviter les soucis de colonnes manquantes
-    db.run(`DROP TABLE IF EXISTS users`, () => {
-      db.run(`CREATE TABLE users (
-        email TEXT PRIMARY KEY,
-        trials_count INTEGER DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`, (err) => {
-        if (err) console.error("Erreur création table users:", err.message);
-        else console.log("Table 'users' recréée avec succès.");
-      });
-    });
-
-    db.run(`CREATE TABLE IF NOT EXISTS reviews (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      rating INTEGER,
-      comment TEXT
-    )`, (err) => {
-      if (err) console.error("Erreur création table reviews:", err.message);
-    });
+    console.log('Connecté à la base de données SQLite.');
   }
 });
+
+// Création des tables nécessaires (si elles n'existent pas)
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS trials (
+    ip TEXT PRIMARY KEY,
+    count INTEGER
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    rating INTEGER,
+    comment TEXT
+  )`);
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ⚠️ IMPORTANT POUR LES FICHIERS STATIQUES :
+// Si tes fichiers (index.html, premium.html, etc.) sont dans un dossier "public", garde cette ligne :
+app.use(express.static(path.join(__dirname, 'public')));
+
+// (Si tes fichiers sont directement à la racine du projet à côté de server.js, commente la ligne du dessus et décommente celle-ci à la place :)
+// app.use(express.static(path.join(__dirname)));
+
 
 // -----------------------------------------------------------------
 // ROUTES DES PAGES HTML
 // -----------------------------------------------------------------
 
+// Route principale (Page d'accueil et landing pages par niche)
 app.get(['/', '/etudiant', '/comptable', '/immobilier'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
 });
 
+// Route pour la page de tarifs / Premium
 app.get('/premium', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'premium.html'));
+  res.sendFile(path.join(__dirname, 'public', 'premium.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
 });
 
+// Route de succès après paiement Stripe
 app.get('/success', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'success.html'));
+  res.sendFile(path.join(__dirname, 'public', 'success.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
 });
 
 
@@ -63,74 +67,40 @@ app.get('/success', (req, res) => {
 // ROUTES API
 // -----------------------------------------------------------------
 
-// API : Enregistrer ou vérifier l'e-mail de l'utilisateur pour les essais gratuits
-app.post('/api/auth/register-trial', (req, res) => {
-  const { email } = req.body;
-  if (!email || !email.includes('@')) {
-    return res.status(400).json({ error: "E-mail invalide." });
-  }
+// API : Récupérer le statut de l'utilisateur (essais gratuits fixés à 5)
+app.get('/api/status', (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-  db.get(`SELECT trials_count FROM users WHERE email = ?`, [email], (err, row) => {
+  db.get(`SELECT count FROM trials WHERE ip = ?`, [ip], (err, row) => {
+    let trialsUsed = row ? row.count : 0;
+    let remainingTrials = Math.max(0, 5 - trialsUsed);
+
+    res.json({
+      isPaid: false,
+      trials: remainingTrials
+    });
+  });
+});
+
+// API : Récupérer les avis clients depuis SQLite
+app.get('/api/reviews', (req, res) => {
+  db.all(`SELECT name, rating, comment FROM reviews ORDER BY id DESC LIMIT 3`, [], (err, rows) => {
     if (err) {
-      console.error("Erreur SQL SELECT:", err.message);
-      return res.status(500).json({ error: "Erreur SQL SELECT: " + err.message });
+      console.error(err);
+      return res.status(500).json({ error: "Erreur serveur lors de la récupération des avis." });
     }
-
-    if (!row) {
-      db.run(`INSERT INTO users (email, trials_count) VALUES (?, 0)`, [email], (err) => {
-        if (err) {
-          console.error("Erreur SQL INSERT:", err.message);
-          return res.status(500).json({ error: "Erreur SQL INSERT: " + err.message });
-        }
-        res.json({ success: true, trialsRemaining: 5 });
-      });
-    } else {
-      let remaining = Math.max(0, 5 - row.trials_count);
-      res.json({ success: true, trialsRemaining: remaining });
-    }
+    res.json(rows);
   });
 });
 
 // API : Route de fusion
 app.post('/api/merge', upload.array('pdfs'), (req, res) => {
-  const email = req.body.email;
-  if (!email) {
-    return res.status(401).json({ error: "E-mail requis pour lancer l'action." });
-  }
-
-  db.get(`SELECT trials_count FROM users WHERE email = ?`, [email], (err, row) => {
-    let currentCount = row ? row.trials_count : 0;
-
-    if (currentCount >= 5) {
-      return res.status(403).json({ error: "Limite de 5 essais gratuits atteinte. Passez au mode Premium." });
-    }
-
-    db.run(`UPDATE users SET trials_count = trials_count + 1 WHERE email = ?`, [email], (err) => {
-      if (err) console.error("Erreur SQL UPDATE:", err.message);
-      res.json({ success: true, message: "Fichiers fusionnés avec succès !" });
-    });
-  });
+  res.send("Fichiers fusionnés avec succès !");
 });
 
 // API : Route de compression
 app.post('/api/compress', upload.single('pdf'), (req, res) => {
-  const email = req.body.email;
-  if (!email) {
-    return res.status(401).json({ error: "E-mail requis pour lancer l'action." });
-  }
-
-  db.get(`SELECT trials_count FROM users WHERE email = ?`, [email], (err, row) => {
-    let currentCount = row ? row.trials_count : 0;
-
-    if (currentCount >= 5) {
-      return res.status(403).json({ error: "Limite de 5 essais gratuits atteinte. Passez au mode Premium." });
-    }
-
-    db.run(`UPDATE users SET trials_count = trials_count + 1 WHERE email = ?`, [email], (err) => {
-      if (err) console.error("Erreur SQL UPDATE:", err.message);
-      res.json({ success: true, message: "Fichier compressé avec succès !" });
-    });
-  });
+  res.send("Fichier compressé avec succès !");
 });
 
 
