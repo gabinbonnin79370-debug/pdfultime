@@ -19,14 +19,25 @@ const db = new sqlite3.Database(dbFile, (err) => {
   } else {
     console.log('Connecté à la base de données SQLite sur :', dbFile);
     
-    // Création de la table users
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-      email TEXT PRIMARY KEY,
-      trials_count INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    // On recrée proprement la table users pour éviter les soucis de colonnes manquantes
+    db.run(`DROP TABLE IF EXISTS users`, () => {
+      db.run(`CREATE TABLE users (
+        email TEXT PRIMARY KEY,
+        trials_count INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`, (err) => {
+        if (err) console.error("Erreur création table users:", err.message);
+        else console.log("Table 'users' recréée avec succès.");
+      });
+    });
+
+    db.run(`CREATE TABLE IF NOT EXISTS reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      rating INTEGER,
+      comment TEXT
     )`, (err) => {
-      if (err) console.error("Erreur création table users:", err.message);
-      else console.log("Table 'users' prête.");
+      if (err) console.error("Erreur création table reviews:", err.message);
     });
   }
 });
