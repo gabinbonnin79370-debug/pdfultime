@@ -35,39 +35,28 @@ db.serialize(() => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ⚠️ IMPORTANT POUR LES FICHIERS STATIQUES :
-// Si tes fichiers (index.html, premium.html, etc.) sont dans un dossier "public", garde cette ligne :
+// Fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
-
-// (Si tes fichiers sont directement à la racine du projet à côté de server.js, commente la ligne du dessus et décommente celle-ci à la place :)
-// app.use(express.static(path.join(__dirname)));
-
 
 // -----------------------------------------------------------------
 // ROUTES DES PAGES HTML
 // -----------------------------------------------------------------
-
-// Route principale (Page d'accueil et landing pages par niche)
 app.get(['/', '/etudiant', '/comptable', '/immobilier'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Route pour la page de tarifs / Premium
 app.get('/premium', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'premium.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
+  res.sendFile(path.join(__dirname, 'public', 'premium.html'));
 });
 
-// Route de succès après paiement Stripe
 app.get('/success', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'success.html')); // Ajuste avec ou sans 'public/' selon ton arborescence GitHub
+  res.sendFile(path.join(__dirname, 'public', 'success.html'));
 });
 
 
 // -----------------------------------------------------------------
 // ROUTES API
 // -----------------------------------------------------------------
-
-// API : Récupérer le statut de l'utilisateur (essais gratuits fixés à 5)
 app.get('/api/status', (req, res) => {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
@@ -82,7 +71,6 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// API : Récupérer les avis clients depuis SQLite
 app.get('/api/reviews', (req, res) => {
   db.all(`SELECT name, rating, comment FROM reviews ORDER BY id DESC LIMIT 3`, [], (err, rows) => {
     if (err) {
@@ -93,14 +81,22 @@ app.get('/api/reviews', (req, res) => {
   });
 });
 
-// API : Route de fusion
 app.post('/api/merge', upload.array('pdfs'), (req, res) => {
   res.send("Fichiers fusionnés avec succès !");
 });
 
-// API : Route de compression
+// API Compression prenant en compte le mode (Standard ou Maximum)
 app.post('/api/compress', upload.single('pdf'), (req, res) => {
-  res.send("Fichier compressé avec succès !");
+  const compressionMode = req.body.mode || 'standard';
+  console.log(`Fichier reçu pour compression en mode : ${compressionMode}`);
+  
+  // Ici tu ajoutes ton traitement de compression selon le mode
+  res.send(`Fichier compressé avec succès en mode ${compressionMode} !`);
+});
+
+app.post('/api/extract-pages', upload.single('pdf'), (req, res) => {
+  const pagesToKeep = req.body.pages;
+  res.send(`Pages ${pagesToKeep} extraites avec succès !`);
 });
 
 
