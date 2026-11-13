@@ -39,9 +39,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // -----------------------------------------------------------------
-// ROUTES DES PAGES HTML
+// ROUTES DES PAGES HTML (Incluant la route /en pour l'anglais)
 // -----------------------------------------------------------------
-app.get(['/', '/etudiant', '/comptable', '/immobilier'], (req, res) => {
+app.get(['/', '/etudiant', '/comptable', '/immobilier', '/en'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -58,7 +58,7 @@ app.get('/success', (req, res) => {
 // ROUTES API & GESTION DES ESSAIS
 // -----------------------------------------------------------------
 
-// Fonction utilitaire pour incrémenter les essais par IP
+// Fonction middleware pour incrémenter les essais par IP
 function useTrial(req, res, next) {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
