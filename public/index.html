@@ -166,7 +166,6 @@
       color: var(--text-muted); font-size: 0.9rem; margin-bottom: 4rem; text-align: center;
     }
 
-    /* Encart Code Promo YouTube / Affiliés */
     .promo-section {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
       padding: 2rem; max-width: 600px; margin: 0 auto 4rem auto; text-align: center;
@@ -175,7 +174,6 @@
     .promo-section p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
     .promo-row { display: flex; gap: 0.75rem; }
 
-    /* FAQ Section */
     .faq-section { margin-bottom: 6rem; border-top: 1px solid var(--card-border); padding-top: 4rem; }
     .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
     .faq-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 2rem; }
@@ -244,6 +242,7 @@
     <div class="nav-links">
       <a href="#outils">Outils</a>
       <a href="#avis">Avis</a>
+      <a href="/en" style="color: var(--accent); font-weight: 700;">🇬🇧 EN</a>
       <a href="#tarifs" class="btn-nav">Abonnements & Pass</a>
     </div>
   </nav>
@@ -296,14 +295,14 @@
         </form>
       </div>
 
-      <!-- COMPRESSION (AVEC SÉLECTEUR DE MODE & AVERTISSEMENT QUALITÉ) -->
+      <!-- COMPRESSION -->
       <div class="tool-card">
         <h3 id="card-3-title">🗜️ Compresser un PDF</h3>
         <p id="card-3-desc">Réduisez le poids de votre fichier PDF selon vos besoins.</p>
         <form id="form-compress" class="file-input-group">
           <input type="file" name="pdf" required accept="application/pdf">
           <div>
-            <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">Mode de compression :</label>
+            <label id="label-mode" style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">Mode de compression :</label>
             <select name="mode" id="compression-mode" onchange="toggleCompressionWarning()" style="width: 100%;">
               <option value="standard">Standard (Équilibré & Recommandé)</option>
               <option value="maximum">Maximum (Fichier très léger)</option>
@@ -341,25 +340,25 @@
 
     </div>
 
-    <!-- ENCART CODE PROMO / CRÉATEURS YOUTUBE -->
+    <!-- ENCART CODE PROMO -->
     <div class="promo-section">
-      <h3>🎁 Vous avez un code créateur ou partenaire ?</h3>
-      <p>Entrez votre code ci-dessous pour appliquer votre réduction immédiatement sur votre pass.</p>
+      <h3 id="promo-title">🎁 Vous avez un code créateur ou partenaire ?</h3>
+      <p id="promo-desc">Entrez votre code ci-dessous pour appliquer votre réduction immédiatement sur votre pass.</p>
       <div class="promo-row">
         <input type="text" id="promo-input" placeholder="Ex: TECHTUTO10">
-        <button type="button" onclick="applyPromo()" class="btn-action" style="width: auto; padding: 0.85rem 1.5rem;">Appliquer</button>
+        <button type="button" onclick="applyPromo()" class="btn-action" id="promo-btn" style="width: auto; padding: 0.85rem 1.5rem;">Appliquer</button>
       </div>
     </div>
 
-    <div class="security-notice">
+    <div class="security-notice" id="security-text">
       🔒 Chiffrement SSL 256-bits — Vos fichiers sont traités en toute confidentialité et supprimés automatiquement après traitement.
     </div>
 
-    <!-- SECTION AVIS CLIENTS -->
+    <!-- SECTION AVIS -->
     <div id="avis" style="padding-top: 2rem; margin-bottom: 6rem;">
       <div class="pricing-header">
-        <h2>Ce que pensent nos utilisateurs</h2>
-        <p style="color: var(--text-muted);">Avis vérifiés de nos utilisateurs en accès illimité.</p>
+        <h2 id="reviews-title">Ce que pensent nos utilisateurs</h2>
+        <p id="reviews-subtitle" style="color: var(--text-muted);">Avis vérifiés de nos utilisateurs en accès illimité.</p>
       </div>
       <div id="reviews-grid" class="pricing-grid">
         <div class="pricing-card" style="padding: 2rem; text-align: center; color: var(--text-muted);">
@@ -371,35 +370,35 @@
     <!-- SECTION FAQ -->
     <div class="faq-section">
       <div class="pricing-header" style="margin-bottom: 2rem;">
-        <h2>Questions fréquentes</h2>
+        <h2 id="faq-title">Questions fréquentes</h2>
         <p style="color: var(--text-muted);">Tout ce que vous devez savoir avant de commencer.</p>
       </div>
       <div class="faq-grid">
         <div class="faq-card">
-          <h4>🔒 Mes documents sont-ils en sécurité ?</h4>
-          <p>Oui, à 100%. Vos fichiers sont traités de manière sécurisée et sont automatiquement supprimés de nos serveurs quelques heures après votre manipulation.</p>
+          <h4 id="faq-1-title">🔒 Mes documents sont-ils en sécurité ?</h4>
+          <p id="faq-1-desc">Oui, à 100%. Vos fichiers sont traités de manière sécurisée et sont automatiquement supprimés de nos serveurs quelques heures après votre manipulation.</p>
         </div>
         <div class="faq-card">
-          <h4>💳 Est-ce un abonnement caché ?</h4>
-          <p>Absolument pas. Tous nos Pass sont des paiements uniques. Aucun prélèvement automatique, aucun renouvellement forcé.</p>
+          <h4 id="faq-2-title">💳 Est-ce un abonnement caché ?</h4>
+          <p id="faq-2-desc">Absolument pas. Tous nos Pass sont des paiements uniques. Aucun prélèvement automatique, aucun renouvellement forcé.</p>
         </div>
         <div class="faq-card">
-          <h4>⚡ Comment récupérer mon accès après paiement ?</h4>
-          <p>C'est instantané ! Dès que votre paiement est validé sur Stripe, vous êtes redirigé vers notre site et vos outils se débloquent automatiquement.</p>
+          <h4 id="faq-3-title">⚡ Comment récupérer mon accès après paiement ?</h4>
+          <p id="faq-3-desc">C'est instantané ! Dès que votre paiement est validé sur Stripe, vous êtes redirigé vers notre site et vos outils se débloquent automatiquement.</p>
         </div>
       </div>
     </div>
 
-    <!-- SECTION TARIFS (MULTI-PALIERS + B2B/PRO) -->
+    <!-- SECTION TARIFS -->
     <div id="tarifs" class="pricing-section">
       <div class="pricing-header">
-        <h2>Pass & Tarifs d'Accès</h2>
-        <p style="color: var(--text-muted);">Débloquez l'accès illimité instantanément. Facture avec TVA disponible pour les pros.</p>
+        <h2 id="pricing-main-title">Pass & Tarifs d'Accès</h2>
+        <p id="pricing-main-desc" style="color: var(--text-muted);">Débloquez l'accès illimité instantanément. Facture avec TVA disponible pour les pros.</p>
       </div>
 
       <div class="pricing-grid">
         
-        <!-- PASS 24H (2.99€) -->
+        <!-- PASS 24H -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-1-title">Pass 24h</h3>
@@ -415,7 +414,7 @@
           <a id="plan-1-btn" href="https://buy.stripe.com/14A4gA8IpaoE7C84Qp3oA03" class="btn-buy secondary">Prendre le Pass</a>
         </div>
 
-        <!-- PASS 1 SEMAINE (4.99€) -->
+        <!-- PASS 1 SEMAINE -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-2-title">Pass 1 Semaine</h3>
@@ -431,9 +430,9 @@
           <a id="plan-2-btn" href="https://buy.stripe.com/00w00kbUB0O43lSbeN3oA02" class="btn-buy secondary">Prendre le Pass</a>
         </div>
 
-        <!-- PASS 1 MOIS - POPULAIRE (9.99€) -->
+        <!-- PASS 1 MOIS -->
         <div class="pricing-card popular">
-          <div class="badge">Le plus populaire</div>
+          <div id="badge-popular" class="badge">Le plus populaire</div>
           <div>
             <h3 id="plan-3-title">Pass 1 Mois</h3>
             <p id="plan-3-desc" style="color: var(--text-muted); font-size: 0.85rem;">Pour les utilisateurs réguliers.</p>
@@ -448,7 +447,7 @@
           <a id="plan-3-btn" href="https://buy.stripe.com/14A9AUf6N8gw7C8eqZ3oA01" class="btn-buy">Prendre le Pass Mois</a>
         </div>
 
-        <!-- PASS ENTREPRISE / PRO (19.99€) -->
+        <!-- PASS PRO -->
         <div class="pricing-card">
           <div>
             <h3 id="plan-4-title">Pass Entreprise Pro</h3>
@@ -476,14 +475,58 @@
   <script>
     const path = window.location.pathname;
 
-    // Avertissement dynamique compression maximum
+    // Traduction dynamique pour la version anglaise (/en)
+    if (path === '/en') {
+      document.getElementById('main-hero-title').innerHTML = "Handle your PDFs <span style='color: var(--accent);'>without any limits</span>";
+      document.getElementById('main-hero-subtitle').textContent = "Merge, extract, compress and convert your documents in seconds from any web browser.";
+      document.title = "PDFULTIME - Online PDF Tools & Unlimited Access";
+      
+      document.getElementById('card-1-title').innerHTML = "🔗 Merge PDFs";
+      document.getElementById('card-1-desc').textContent = "Combine multiple PDF files into a single document in 1 click.";
+      document.getElementById('card-2-title').innerHTML = "✂️ Extract Pages";
+      document.getElementById('card-2-desc').textContent = "Select and keep only the pages you actually need.";
+      document.getElementById('card-3-title').innerHTML = "🗜️ Compress PDF";
+      document.getElementById('card-3-desc').textContent = "Reduce your PDF file size according to your needs.";
+      document.getElementById('card-4-title').innerHTML = "🔄 PDF to Word";
+      document.getElementById('card-4-desc').textContent = "Transform your PDFs into editable Word documents (.docx).";
+      document.getElementById('card-5-title').innerHTML = "📊 PDF to Excel";
+      document.getElementById('card-5-desc').textContent = "Extract data from your PDFs directly into a spreadsheet (.xlsx).";
+
+      document.getElementById('promo-title').textContent = "🎁 Have a creator or partner code?";
+      document.getElementById('promo-desc').textContent = "Enter your code below to apply your discount immediately at checkout.";
+      document.getElementById('promo-btn').textContent = "Apply";
+
+      document.getElementById('security-text').textContent = "🔒 256-bit SSL Encryption — Your files are handled with complete confidentiality and deleted automatically after processing.";
+      document.getElementById('reviews-title').textContent = "What our users say";
+      document.getElementById('reviews-subtitle').textContent = "Verified reviews from our unlimited access users.";
+      document.getElementById('faq-title').textContent = "Frequently Asked Questions";
+      
+      document.getElementById('pricing-main-title').textContent = "Access Passes & Pricing";
+      document.getElementById('pricing-main-desc').textContent = "Unlock unlimited instant access. Invoices with VAT available for pros.";
+
+      document.getElementById('plan-1-title').textContent = "24h Pass";
+      document.getElementById('plan-1-desc').textContent = "Perfect for an urgent need.";
+      document.getElementById('plan-1-btn').textContent = "Get Pass";
+
+      document.getElementById('plan-2-title').textContent = "1 Week Pass";
+      document.getElementById('plan-2-desc').textContent = "Ideal for ongoing projects.";
+      document.getElementById('plan-2-btn').textContent = "Get Pass";
+
+      document.getElementById('plan-3-title').textContent = "1 Month Pass";
+      document.getElementById('plan-3-desc').textContent = "For regular users.";
+      document.getElementById('plan-3-btn').textContent = "Get Monthly Pass";
+
+      document.getElementById('plan-4-title').textContent = "Pro Business Pass";
+      document.getElementById('plan-4-desc').textContent = "For agencies & offices (VAT deductible).";
+      document.getElementById('plan-4-btn').textContent = "Get Pro Pass";
+    }
+
     function toggleCompressionWarning() {
       const mode = document.getElementById('compression-mode').value;
       const warning = document.getElementById('max-warning');
       warning.style.display = (mode === 'maximum') ? 'block' : 'none';
     }
 
-    // Gestion du code promo YouTube / Affiliés
     function applyPromo() {
       const code = document.getElementById('promo-input').value.trim();
       if (!code) {
@@ -493,7 +536,6 @@
       alert(`Code promo "${code.toUpperCase()}" appliqué ! Il sera pris en compte lors de votre paiement sur Stripe.`);
     }
 
-    // Auto-détection du paramètre URL ?promo=XYZ
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const promoParam = urlParams.get('promo');
@@ -508,13 +550,23 @@
         const data = await res.json();
         const trialSpan = document.getElementById("trial-text");
         
-        if (data.isPaid) {
-          trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
-        } else if (data.trials > 0) {
-          trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
+        if (path === '/en') {
+          if (data.isPaid) {
+            trialSpan.textContent = "✨ Unlimited pass active! Enjoy all tools.";
+          } else if (data.trials > 0) {
+            trialSpan.textContent = `You have ${data.trials} free trial(s) left without registration!`;
+          } else {
+            trialSpan.textContent = "Trials ended! Choose a pass to continue.";
+          }
         } else {
-          trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
-          trialSpan.parentElement.style.borderColor = "#ef4444";
+          if (data.isPaid) {
+            trialSpan.textContent = "✨ Pass illimité actif ! Profitez de tous les outils.";
+          } else if (data.trials > 0) {
+            trialSpan.textContent = `Il vous reste ${data.trials} essai(s) gratuit(s) sans inscription !`;
+          } else {
+            trialSpan.textContent = "Essais terminés ! Choisissez un pass pour continuer.";
+            trialSpan.parentElement.style.borderColor = "#ef4444";
+          }
         }
       } catch (err) {
         console.error("Erreur statut", err);
@@ -563,7 +615,6 @@
       }
     }
 
-    // Interception propre des formulaires en AJAX (Fetch) pour ne pas recharger la page
     async function handleFormSubmit(formId, endpoint, feedbackId) {
       const form = document.getElementById(formId);
       const feedback = document.getElementById(feedbackId);
@@ -571,7 +622,6 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Vérification des essais avant d'envoyer
         const statusRes = await fetch('/api/status');
         const statusData = await statusRes.json();
 
@@ -593,7 +643,7 @@
           const text = await res.text();
           feedback.textContent = text;
           feedback.style.color = "var(--accent)";
-          checkStatus(); // Met à jour le compteur d'essais restants
+          checkStatus();
         } catch (err) {
           feedback.textContent = "Erreur lors du traitement.";
           feedback.style.color = "var(--danger)";
@@ -601,7 +651,6 @@
       });
     }
 
-    // Enregistrement des gestionnaires sur chaque outil
     handleFormSubmit('form-merge', '/api/merge', 'feedback-merge');
     handleFormSubmit('form-extract', '/api/extract-pages', 'feedback-extract');
     handleFormSubmit('form-compress', '/api/compress', 'feedback-compress');
