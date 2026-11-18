@@ -626,7 +626,7 @@
         const statusData = await statusRes.json();
 
         if (!statusData.isPaid && statusData.trials <= 0) {
-          alert("Vous avez épuisé vos 5 essais gratuits ! Veuillez choisir un pass pour continuer.");
+          alert("Vous avez épuisé vos 3 essais gratuits ! Veuillez choisir un pass pour continuer.");
           document.getElementById("tarifs").scrollIntoView({ behavior: 'smooth' });
           return;
         }
