@@ -58,14 +58,14 @@ app.get('/success', (req, res) => {
 // ROUTES API & GESTION DES ESSAIS
 // -----------------------------------------------------------------
 
-// Fonction middleware pour incrémenter les essais par IP
+// Fonction middleware pour incrémenter les essais par IP (limite fixée à 3)
 function useTrial(req, res, next) {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
   db.get(`SELECT count FROM trials WHERE ip = ?`, [ip], (err, row) => {
     let trialsUsed = row ? row.count : 0;
     
-    if (trialsUsed >= 5) {
+    if (trialsUsed >= 3) {
       return res.status(403).send("Essais gratuits épuisés.");
     }
 
@@ -81,7 +81,7 @@ app.get('/api/status', (req, res) => {
 
   db.get(`SELECT count FROM trials WHERE ip = ?`, [ip], (err, row) => {
     let trialsUsed = row ? row.count : 0;
-    let remainingTrials = Math.max(0, 5 - trialsUsed);
+    let remainingTrials = Math.max(0, 3 - trialsUsed);
 
     res.json({
       isPaid: false,
